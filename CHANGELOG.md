@@ -1,5 +1,12 @@
 
 
+## 4.3.6 (2024-07-31)
+
+
+### ✨ Features | 新功能
+
+* init ([ba9138b](https://github.com/tive6/min-api/commit/ba9138bbf70e93099083c7f4b8b13dbc72c3a610))
+
 ## [4.3.4](https://gitee.com/tive/post-tools-tauri/compare/4.3.3...4.3.4) (2024-07-29)
 
 
