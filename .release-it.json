@@ -7,7 +7,6 @@
     "requireCleanWorkingDir": false,
     "requireUpstream": false,
     "push": true,
-    "pushRepo": "https://gitee.com/tive/post-tools-tauri.git",
     "add": {
       "files": ["package.json", "CHANGELOG.md", "*.zip"]
     },
