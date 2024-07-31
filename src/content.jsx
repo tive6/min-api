@@ -1,0 +1,534 @@
+import { SendOutlined } from '@ant-design/icons'
+import { useDebounceEffect, useReactive } from 'ahooks'
+import { Badge, Button, Form, Input, notification, Select, Tabs } from 'antd'
+import { useEffect, useRef, useState } from 'react'
+
+import { http, stream } from './api/ajax'
+import { DefaultRequestType, historyKey, layout, MethodOptions, testUrl } from './common/config'
+import {
+  arrToObj,
+  downloadFile,
+  fileToArrayBuffer,
+  formatFixedDate,
+  getLocalHistoryList,
+  numbersArrayToText,
+  objToArr,
+  processStream,
+  queryToObj,
+} from './common/helper'
+import { getRandomKey } from './common/helper'
+import DataTab from './components/dataTab'
+import HandleBar from './components/handleBar.jsx'
+import HistorySearch from './components/historySearch.jsx'
+import HistoryTab from './components/historyTab'
+import ParamsFormTab from './components/paramsFormTab'
+import ParamsJsonTab from './components/paramsJsonTab'
+import SubTabBarExtra from './components/subTabBarExtra.jsx'
+import { useStore } from './store/index.js'
+const { Option } = Select
+
+const Content = () => {
+  const paramsRef = useRef()
+  const headersRef = useRef()
+  const paramsJsonRef = useRef()
+  const historySearchRef = useRef()
+
+  const currentFile = useRef(null)
+  const [headForm] = Form.useForm()
+  const store = useStore()
+
+  const count = useReactive({
+    params: 0,
+    headers: 0,
+    body: 0,
+  })
+
+  const that = useReactive({
+    paramsTabKey: '11',
+    resJsonData: {},
+    isUpload: false,
+    resData: '',
+  })
+
+  const [params, setParams] = useState([])
+  const [headers, setHeaders] = useState([])
+  const [url, setUrl] = useState(testUrl)
+  const [reqParams, setReqParams] = useState({})
+  const [reqJson, setReqJson] = useState({})
+  const [queryParams, setQueryParams] = useState({})
+  const [reqHeaders, setReqHeaders] = useState({})
+  const [method, setMethod] = useState('GET')
+  const [resAllJson, setAllResJson] = useState({})
+  const [tabKey, setTabKey] = useState('1')
+  const [status, setStatus] = useState(0)
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    if (method === 'GET') {
+      let { queryArr } = queryToObj(url)
+      console.log(queryArr)
+      let obj = arrToObj(queryArr)
+      setQueryParams(obj)
+    }
+  }, [url])
+
+  useDebounceEffect(
+    () => {
+      if (!params.length) {
+        count.params = 0
+        return
+      }
+      console.log(params)
+      let obj = arrToObj(params)
+      setReqParams(obj)
+      count.params = params.length
+    },
+    [params],
+    {
+      wait: 500,
+    }
+  )
+
+  useDebounceEffect(
+    () => {
+      try {
+        count.params = Reflect.ownKeys(reqJson)?.length
+      } catch (err) {
+        count.params = 0
+      }
+    },
+    [reqJson],
+    {
+      wait: 500,
+    }
+  )
+
+  useDebounceEffect(
+    () => {
+      if (!headers.length) {
+        count.headers = 0
+        return
+      }
+      console.log(headers)
+      let obj = arrToObj(headers)
+      setReqHeaders(obj)
+      count.headers = headers.length
+    },
+    [headers],
+    {
+      wait: 500,
+    }
+  )
+
+  useEffect(() => {
+    if (status === 0) return
+    send()
+  }, [status])
+
+  function paramsTabChange(key) {
+    that.paramsTabKey = key
+    if (key === '11') {
+      count.params = params?.length || 0
+    } else {
+      count.params = Reflect.ownKeys(reqJson)?.length || 0
+    }
+  }
+
+  const inputOnBlur = () => {
+    let { url } = headForm.getFieldsValue()
+    console.log(url)
+    setUrl(url)
+  }
+
+  const inputOnEnter = () => {
+    inputOnBlur()
+    send()
+  }
+
+  const setHistoryData = (opts) => {
+    let list = getLocalHistoryList()
+    list.push(opts)
+    window.localStorage.setItem(historyKey, JSON.stringify(list))
+    historySearchRef?.current?.search()
+  }
+
+  const initFormData = (data) => {
+    headForm.setFieldsValue(data)
+    console.log(headForm.getFieldsValue())
+  }
+
+  const httpHandle = async (p) => {
+    let date = formatFixedDate(new Date(), 'yyyy-MM-dd HH:mm:ss')
+    let opts = {
+      ...p,
+      createTime: date,
+      key: getRandomKey(),
+    }
+    let state = 0
+    try {
+      setLoading(true)
+      if (store.requestType === 'stream') {
+        state = await fetchOfStream(p)
+        return
+      }
+      let res = await http(p)
+      console.log(res)
+      let { url, config, data, headers, status, statusText } = res
+      // console.log(request)
+      console.log(store.requestType)
+      console.log(res.data)
+      if (store.requestType !== 'download') {
+        try {
+          // 尝试解析 json
+          data = JSON.parse(data)
+        } catch (err) {
+          console.info('response data is not json')
+        }
+      } else {
+        if (status !== 200) {
+          try {
+            data = numbersArrayToText(data)
+          } catch (err) {
+            console.info('response data is not numbersArray')
+          }
+        }
+      }
+      that.resData = data
+      setTabKey('5')
+      state = 1
+      // console.log(headers)
+      if (status === 200 && data && store.requestType === 'download') {
+        console.log('download')
+        let err = await downloadFile({ url, data, headers })
+        console.log(err)
+        if (err) {
+          data = err
+          that.resData = err
+        }
+      }
+      setAllResJson({
+        status,
+        statusText,
+        headers,
+        config,
+        data,
+        // request,
+      })
+    } catch (err) {
+      console.log(p)
+      console.log(err)
+      notification.error({
+        message: '提醒',
+        description: `请求失败！`,
+      })
+      setTabKey('4')
+      setAllResJson(err)
+    } finally {
+      console.log('finally')
+      setHistoryData({
+        ...opts,
+        status: state,
+      })
+      setQueryParams({})
+      setLoading(false)
+    }
+  }
+
+  async function fetchOfStream(p) {
+    try {
+      let res = await stream(p)
+      let { body, bodyUsed, headers, ok, redirected, status, statusText, type, url } = res
+      const reader = body.getReader()
+      that.resData = []
+      setTabKey('5')
+      await processStream(reader, (str) => {
+        // console.log(str)
+        that.resData = [...that.resData, str]
+      })
+      // console.log(headers.entries())
+      // res?.headers?.entries()?.forEach?.((item) => {
+      //   console.log(item)
+      // })
+      setAllResJson({
+        body: [],
+        bodyUsed,
+        headers: headers,
+        ok,
+        redirected,
+        status,
+        statusText,
+        type,
+        url,
+      })
+      console.log(res)
+      return status === 200 ? 1 : 0
+    } catch (e) {
+      console.log(e)
+      return 0
+    }
+  }
+
+  const send = async () => {
+    // loading 是否正在请求
+    if (loading) return
+    let { url, method } = headForm.getFieldsValue()
+    if (!/^(www.)|(http[s]?[:\\//])/g.test(url)) {
+      notification.warning({
+        message: '提醒',
+        description: '请输入合法 url ！',
+      })
+      return false
+    }
+    console.log(method, url)
+    setUrl(url)
+    let queryObj = {}
+    if (url.includes('?')) {
+      queryObj = queryToObj(url).queryObj
+      url = url.match(/(\S*)\?/)[1]
+    }
+    let obj = {}
+    if (that.paramsTabKey === '11') {
+      if (JSON.stringify(reqParams) !== '{}') {
+        obj = reqParams
+      }
+    } else {
+      if (JSON.stringify(reqJson) !== '{}') {
+        obj = reqJson
+      }
+    }
+    obj = Object.assign({}, queryParams, queryObj, obj)
+    let p = {
+      url,
+      method,
+      headers: reqHeaders,
+    }
+    if (method === 'GET') {
+      p.params = obj
+    } else {
+      let params = Object.assign({}, queryParams, queryObj)
+      // console.log(reqParams)
+      // console.log(reqJson)
+      p.data = Object.assign({}, reqParams, reqJson)
+      p.params = params
+      console.log('params', params)
+      console.log('data', p.data)
+      if (JSON.stringify(params) !== '{}') {
+        let str = ''
+        Object.keys(params).map((k) => {
+          str += `&${k}=${params[k]}`
+        })
+        console.log(`${url}?${str.slice(1)}`)
+        let fd = {
+          method,
+          url: `${url}?${str.slice(1)}`,
+        }
+        initFormData(fd)
+      }
+
+      if (store.requestType === 'upload') {
+        console.log(currentFile.current)
+        if (!currentFile.current) {
+          notification.warning({
+            message: '提醒',
+            description: '请选择要上传的文件 ！',
+          })
+          return false
+        }
+        let { name, type } = currentFile.current
+        let arrayBuffer = await fileToArrayBuffer(currentFile.current)
+        console.log(p.data)
+        p.data['file'] = {
+          file: arrayBuffer,
+          mime: type,
+          fileName: name,
+        }
+        // let formData = new FormData()
+        // console.log(currentFile.current)
+        // formData.append('file', currentFile.current, `/Users/tiven/Downloads/${currentFile.current.name}`)
+        // p.data = formData
+      }
+    }
+    await httpHandle({
+      ...p,
+      requestType: store.requestType,
+    })
+  }
+
+  function setCurrentFile(file) {
+    currentFile.current = file
+  }
+
+  const prefixSelector = (
+    <Form.Item name="method" noStyle>
+      <Select onChange={setMethod} style={{ width: 120 }}>
+        {MethodOptions.map(({ value, label }) => (
+          <Option key={value} value={value}>
+            {label}
+          </Option>
+        ))}
+      </Select>
+    </Form.Item>
+  )
+
+  const tabsItems = [
+    {
+      key: '1',
+      label: (
+        <div>
+          参数
+          <Badge count={count.params} style={{ backgroundColor: '#249C47' }} />
+        </div>
+      ),
+      children: (
+        <Tabs
+          size="small"
+          tabPosition={'top'}
+          type="card"
+          activeKey={that.paramsTabKey}
+          onChange={paramsTabChange}
+          tabBarExtraContent={{
+            right: <SubTabBarExtra />,
+          }}
+          items={[
+            {
+              key: '11',
+              label: 'Form 格式',
+              children: (
+                <>
+                  <ParamsFormTab
+                    name="ParamsFormTab"
+                    ref={paramsRef}
+                    setCurrentFile={setCurrentFile}
+                    onDataChange={setParams}
+                  />
+                </>
+              ),
+            },
+            {
+              key: '12',
+              label: 'Json 格式',
+              children: (
+                <ParamsJsonTab
+                  ref={paramsJsonRef}
+                  resJson={that.resJsonData}
+                  onDataChange={setReqJson}
+                />
+              ),
+            },
+          ]}
+        ></Tabs>
+      ),
+    },
+    {
+      key: '2',
+      label: (
+        <div>
+          请求头
+          <Badge count={count.headers} style={{ backgroundColor: '#249C47' }} />
+        </div>
+      ),
+      forceRender: true, // 被隐藏时是否渲染 DOM 结构
+      children: <ParamsFormTab name="HeadersTab" ref={headersRef} onDataChange={setHeaders} />,
+    },
+    {
+      key: '4',
+      label: '响应',
+      children: <DataTab resJson={resAllJson} modes={['tree', 'code']} />,
+    },
+    {
+      key: '5',
+      label: '数据',
+      children: <DataTab resJson={that.resData} modes={['code', 'tree']} />,
+    },
+    {
+      key: '6',
+      label: '历史',
+      children: <HistoryTab onQueryChange={onQueryChange} />,
+    },
+  ]
+
+  function onQueryChange(record) {
+    let { url, method, requestType, params, data, headers } = record
+    setUrl(url)
+    setMethod(method)
+    setQueryParams(params)
+    setReqHeaders(headers)
+    store.requestType = requestType || DefaultRequestType
+    let formData = {
+      url,
+      method,
+    }
+    initFormData(formData)
+    setStatus(status + 1)
+    let res = null
+    if (method === 'GET') {
+      res = params
+      setReqParams({})
+    } else {
+      res = data
+    }
+    setTabKey('1')
+    if (requestType === 'upload') {
+      that.paramsTabKey = '11'
+    } else {
+      that.paramsTabKey = '12'
+      setReqJson(res)
+    }
+
+    let timer = setTimeout(() => {
+      if (requestType === 'upload') {
+        paramsRef?.current?.initHandle(objToArr(res))
+      } else {
+        paramsJsonRef?.current?.initHandle(res)
+      }
+      clearTimeout(timer)
+    }, 200)
+
+    // paramsRef.current.initHandle(objToArr(res))
+    headersRef?.current?.initHandle(objToArr(headers))
+  }
+
+  return (
+    <div className="app-content">
+      <HandleBar />
+      <Form
+        form={headForm}
+        {...layout}
+        initialValues={{ url, method }}
+        name="basic"
+        layout="inline"
+        size="large"
+      >
+        <Form.Item label="" name="url">
+          <Input
+            allowClear
+            addonBefore={prefixSelector}
+            style={{ width: '65vw' }}
+            onBlur={inputOnBlur}
+            onPressEnter={inputOnEnter}
+            placeholder="请输入url，例：https://test.cn"
+          />
+        </Form.Item>
+        <Form.Item>
+          <Button loading={loading} onClick={send} type="primary" icon={<SendOutlined />} block>
+            发送
+          </Button>
+        </Form.Item>
+      </Form>
+
+      <Tabs
+        tabBarExtraContent={{
+          right: tabKey === '6' ? <HistorySearch ref={historySearchRef} /> : null,
+        }}
+        onTabClick={setTabKey}
+        defaultActiveKey={tabKey}
+        activeKey={tabKey}
+        items={tabsItems}
+        size="large"
+        style={{ flex: 1, overflowY: 'hidden' }}
+      />
+    </div>
+  )
+}
+
+export default Content

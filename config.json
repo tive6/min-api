@@ -1,0 +1,18 @@
+{
+  "buildPrefix": "resource",
+  "buildDirPath": "./resource_build",
+  "filename": "resource-20240730-01.zip",
+  "host": "118.89.93.238",
+  "username": "ubuntu",
+  "rsaPathObj": {
+    "win32": "D:/ssh/id_rsa",
+    "darwin": "/Users/tiven/Linux_config/id_rsa"
+  },
+  "localPathObj": {
+    "win32": "D:/zip",
+    "darwin": "/Users/tiven/Linux_config/zip"
+  },
+  "remotePath": "/data/www/resource_build/",
+  "shellPath": "/data/www/shell/",
+  "shellName": "deploy.rspress-blog.sh"
+}

@@ -1,0 +1,23 @@
+[package]
+name = "min-api"
+version = "4.0.0"
+description = "一个基于Tauri和React开发，用于http/https接口测试的工具"
+authors = ["Tive"]
+license = ""
+repository = ""
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[build-dependencies]
+tauri-build = { version = "1.4", features = [] }
+
+[dependencies]
+tauri = { version = "1.4", features = [ "updater", "window-all", "dialog-all", "fs-all", "protocol-all", "path-all", "process-all", "global-shortcut-all", "http-all", "http-multipart", "shell-open"] }
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+[features]
+# this feature is used for production builds or when `devPath` points to the filesystem
+# DO NOT REMOVE!!
+custom-protocol = ["tauri/custom-protocol"]
