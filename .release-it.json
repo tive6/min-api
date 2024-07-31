@@ -32,7 +32,6 @@
   "github": {
     "release": true,
     "draft": true,
-    "repo": "git@gitee.com:tive/post-tools-tauri.git",
     "assets": [
       "package/*.zip"
     ]
