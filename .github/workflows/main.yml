@@ -67,6 +67,6 @@ jobs:
       - run: pnpm
 
       - name: Create Update
-        run: yarn update
+        run: pnpm update
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
