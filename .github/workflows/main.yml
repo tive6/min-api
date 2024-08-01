@@ -23,6 +23,9 @@ jobs:
         with:
           node-version: 20
 
+      - name: Install pnpm
+        run: npm install -g pnpm
+
       - name: Install Rust stable
         uses: actions-rs/toolchain@v1
         with:
@@ -58,7 +61,10 @@ jobs:
         with:
           node-version: 20
 
-      - run: yarn
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - run: pnpm
 
       - name: Create Update
         run: yarn update
