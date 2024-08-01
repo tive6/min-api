@@ -44,7 +44,7 @@ jobs:
         with:
           tagName: v__VERSION__
           releaseName: v__VERSION__
-        run: pnpm tauri build # 假设 build 是你的 npm 脚本命令
+#        run: pnpm tauri build # 假设 build 是你的 npm 脚本命令
 
   update:
     needs: release
