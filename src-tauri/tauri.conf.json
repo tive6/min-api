@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "MinApi",
-    "version": "4.3.11"
+    "version": "4.3.12"
   },
   "tauri": {
     "allowlist": {
