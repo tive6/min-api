@@ -1,5 +1,7 @@
 
 
+## [4.3.19](https://github.com/tive6/min-api/compare/4.3.18...4.3.19) (2024-08-05)
+
 ## [4.3.18](https://github.com/tive6/min-api/compare/4.3.17...4.3.18) (2024-08-05)
 
 ## [4.3.17](https://github.com/tive6/min-api/compare/4.3.16...4.3.17) (2024-08-05)

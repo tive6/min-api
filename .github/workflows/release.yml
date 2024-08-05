@@ -93,5 +93,5 @@ jobs:
         run: |
           pnpm -v
           node -v
-          ls
+          ls src-tauri/target/aarch64-apple-darwin/release/bundle/macos/
 
