@@ -88,10 +88,9 @@ jobs:
           prerelease: false
           args: ${{ matrix.args }}
 
-      - name: run npm shell (windows only)
-        if: matrix.platform == 'macos-latest'
-        run: |
-          pnpm -v
-          node -v
-          ls src-tauri/target/aarch64-apple-darwin/release/bundle/macos/
+#      - name: run npm shell (windows only)
+#        if: matrix.platform == 'windows-latest'
+#        run: |
+#          pnpm -v
+#          node -v
 

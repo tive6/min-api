@@ -20,23 +20,11 @@ const ssh = new NodeSSH()
     console.log('ssh连接成功')
     await ssh.putFiles([
       {
-        local: path.join(localPath, filename),
+        local: path.join(filename),
         remote: `${remotePath}${filename}`,
       },
-      {
-        local: path.join(__dirname, 'deploy.sh'),
-        remote: `${shellPath}${shellName}`,
-      },
     ])
-    console.log(`${filename} && shell脚本上传成功`)
-    let res = await ssh.execCommand(`sh ${shellName} ${filename}`, { cwd: shellPath })
-    if (res.stdout) {
-      console.log(`\r\n${res.stdout}\r\n`)
-      console.log('shell脚本执行成功')
-    } else {
-      console.log(`\r\n${res.stderr}\r\n`)
-      console.log('shell脚本执行失败')
-    }
+    console.log(`${filename} 上传成功`)
   } catch (err) {
     console.log('ssh连接失败')
     console.log(err)

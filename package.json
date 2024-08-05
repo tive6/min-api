@@ -15,6 +15,8 @@
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
     "git": "tive git -c tive.git.config.cjs",
     "sync:ver": "node ./scripts/sync-version.cjs",
+    "sync:latest": "node ./scripts/get-latest-info.mjs",
+    "upload:json": "node deploy.cjs",
     "upload": "node ./scripts/upload-attachments.mjs",
     "release": "release-it",
     "release:dry": "release-it --dry-run --no-npm"
