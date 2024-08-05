@@ -1,5 +1,12 @@
 
 
+## [4.4.0](https://github.com/tive6/min-api/compare/4.3.19...4.4.0) (2024-08-05)
+
+
+###   Continuous Integration | CI 配置
+
+* 增加获取最新 latest.json 内容脚本和 版本同步脚本。增加上传到服务器端的逻辑，修改tauri对应updater的配置 ([ddaa337](https://github.com/tive6/min-api/commit/ddaa3372d4f32bb6971cd57c93c2994bf1c4aff5))
+
 ## [4.3.19](https://github.com/tive6/min-api/compare/4.3.18...4.3.19) (2024-08-05)
 
 ## [4.3.18](https://github.com/tive6/min-api/compare/4.3.17...4.3.18) (2024-08-05)
