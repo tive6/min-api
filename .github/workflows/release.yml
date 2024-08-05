@@ -42,14 +42,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-modules-
 
-#      - name: Cache Cargo
-#        uses: actions/cache@v3
-#        with:
-#          path: |
-#            ~/.cargo/registry
-#            ~/.cargo/git
-#            target
-#          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
+      - name: Cache Cargo
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
 
       - name: install Rust stable
         uses: dtolnay/rust-toolchain@stable
@@ -71,6 +71,10 @@ jobs:
       - name: install frontend dependencies
         run: pnpm install
 
+      - name: Check for cache hit # 判断缓存是否命中
+        if: steps.cache.outputs.cache-hit == 'true'
+        run: echo "Cache was found and used"
+
       - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -83,3 +87,11 @@ jobs:
           releaseDraft: true
           prerelease: false
           args: ${{ matrix.args }}
+
+      - name: run npm shell (windows only)
+        if: matrix.platform == 'macos-latest'
+        run: |
+          pnpm -v
+          node -v
+          ls
+
