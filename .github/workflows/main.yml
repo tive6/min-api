@@ -1,11 +1,11 @@
 name: Release
 
 on:
-  release:
-    types: [ published ]
-#  push:
-#    branches:
-#      - master # master 分支 push 时触发工作流
+#  release:
+#    types: [ published ]
+  push:
+    branches:
+      - test # master 分支 push 时触发工作流
 
 jobs:
   release:
