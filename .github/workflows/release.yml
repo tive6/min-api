@@ -1,12 +1,12 @@
-name: 'publish'
+name: 'Release publish'
 
 on:
+  release:
+    types: [ published ]
 #  push:
 #    branches:
 #      - release
-  push:
-    branches:
-      - master # master 分支 push 时触发工作流
+#      - master # master 分支 push 时触发工作流
 
 jobs:
   publish-tauri:

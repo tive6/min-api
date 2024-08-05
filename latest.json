@@ -1,23 +1,23 @@
 {
-  "version": "4.3.17",
+  "version": "4.4.0",
   "notes": "See the assets to download this version and install.",
-  "pub_date": "2024-08-05T07:43:17.482Z",
+  "pub_date": "2024-08-05T11:34:11.683Z",
   "platforms": {
     "darwin-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUZngwdjNaa2lxQmJKS2Z3MEU1N01HNkQxYWo5N2xvWWFqeU5jaTZsbEFscWZycWJMWmttTnZhODF6YXBJWVFaSnpRYVI5R2VTM2dlL2JaVEtHeWM1V3A3MWxhbmI5MVE4PQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzIyODQzMzY3CWZpbGU6TWluQXBpLmFwcC50YXIuZ3oKNjdhMUtJVnl1MDJmU0tCRlBpU2VEU2FWSXNDaXJtQ05vRFFWc0w0MHJMU2NFT1Rpamd0UkdONXFQeTd1Wlp6clpVWS8rSXprZzlqdWd1ellWODVZQkE9PQo=",
-      "url": "https://github.com/tive6/min-api/releases/download/app-v4.3.17/MinApi_x64.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUZngwdjNaa2lxQmMwY2xMVWQ2SU5lT3dLVG45VjVVOUZYTEs4c0piMVBqUWQwck56TFpYcVpDd2VmeDNxWjBDbGR6K3pKdnJXV1grSTNldkNRQWpFRUsrandrZk1HMmdNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzIyODU3MzY4CWZpbGU6TWluQXBpLmFwcC50YXIuZ3oKQ0NjN3Jnd1grNjZYM2xWTDhpSGZ6b29MT0FrVDBkb2JhektBK1hQemFmUG5Kckxyc2xIdzFhbFJTUk1yVmVJUWhIQ1NuWXF2ZnduaDErSXJtWlJ0RFE9PQo=",
+      "url": "https://github.com/tive6/min-api/releases/download/app-v4.4.0/MinApi_x64.app.tar.gz"
     },
     "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUZngwdjNaa2lxQlkyR1RwSU5rcU1YUzBzMm5yU290R2FxeFVBT0R3bzNQUVV3elZQaUMvOEJLbFE0Yno1NjBvL1dMTmg5QXdLRnIxUFFBdEN1S2o5MkpwbUdvTWRjRlFVPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzIyODQzMzc2CWZpbGU6TWluQXBpLmFwcC50YXIuZ3oKV3g0Mk8yWW5YV05FMGh6TEtuTE0xbThzWERlMHd4NUo4Q2hWdnhsMDYzaXJYSUdnc2hIbTZ5R0ZUc1dLVzZxcmdYOGtCdFRxUkhVay9raENwNjk1QVE9PQo=",
-      "url": "https://github.com/tive6/min-api/releases/download/app-v4.3.17/MinApi_aarch64.app.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUZngwdjNaa2lxQmJhaUw3NGVVUUxKYXZ2RXlQVVVzNjN2VWhGT05QYnByS1grUHpMTEFzQkpzTGc2UHdNVUkwNmVFbWxJVXkzUjU3cnhFWDFQeTZaQjZPK3AydFRmZndNPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzIyODU3Mzg1CWZpbGU6TWluQXBpLmFwcC50YXIuZ3oKclZOWUJLekNvVzNJTUQ4WERVQ056dXVqZkwwd0EvaUNrclZKVVdQOFFJdDJMMWllTXVyOWxMekNLMklRNGtrQ2VaWEdlM0I2UkwxWGNFTlNFZTc3QkE9PQo=",
+      "url": "https://github.com/tive6/min-api/releases/download/app-v4.4.0/MinApi_aarch64.app.tar.gz"
     },
     "linux-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUZngwdjNaa2lxQlQ4OWYrak9keDZVaU1CZlBrWThuZnI1Smk4SHFiTFpObnZjL01CeHpPZ3l2WkFhcEoxaFY5VWE2WURQZEVWbHdaNVJ2QklQNHdhcTR6WmNvL3NzV3dRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzIyODQzNTUxCWZpbGU6bWluLWFwaV80LjMuMTdfYW1kNjQuQXBwSW1hZ2UudGFyLmd6CndEaHhaZDFpQk5URFhnS0lscVVxa1ZJRU9IYWJQNU1rR3RZV2NhL3FaNzQrdW1XWndzMzZtdkFKLzIxSlNCbG1UYXcvZTZIQVJZUit6MkxIclByakNBPT0K",
-      "url": "https://github.com/tive6/min-api/releases/download/app-v4.3.17/min-api_4.3.17_amd64.AppImage.tar.gz"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUZngwdjNaa2lxQlhLa1RyLzJWaTZCa05kVVk0QWpVYTd3eEc2WkExdXpCUUFjcVlYaWxka1FlYVZLQUFpZWQvTEY1RjFzZzFCQVppcmFmQXQyZEpmY1JCblRsb2ZQR2dJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzIyODU3NTQ0CWZpbGU6bWluLWFwaV80LjQuMF9hbWQ2NC5BcHBJbWFnZS50YXIuZ3oKWFE2TlJTNWFmbld0SXVRNWw1MSsvSW5kM2hQalF5WFpEVDRyM1FDc1BlQjdlSVpWblhIeVh5OXlkL2RVc2xlWTdpS0Y1MEhxT0xMREtFdy8yaVUrQXc9PQo=",
+      "url": "https://github.com/tive6/min-api/releases/download/app-v4.4.0/min-api_4.4.0_amd64.AppImage.tar.gz"
     },
     "windows-x86_64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUZngwdjNaa2lxQmR5MWlnSUp0a1ByVHdZOTdHWnJXaThER296UloyNHNBUTBNK0Ywczd6UDMxTWlnM3l5ZWx4U2hDNUNLdlNmWHBPNWRPUnRxRDZKQ2paL2xzL2VqMHdBPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzIyODQzNzk0CWZpbGU6TWluQXBpXzQuMy4xN194NjRfemgtQ04ubXNpLnppcAp5ZDNWcUVyUkVoWWkwN3d5Wktzc3VPaVVWNjlLQ0lBN2RQY3ZKZHY0Tnh0eEEwV3p0QUpLenhJbk9zUS91R2tMeUJLSi9TVy82WDRZVHl5eFkyZ01CQT09Cg==",
-      "url": "https://github.com/tive6/min-api/releases/download/app-v4.3.17/MinApi_4.3.17_x64_zh-CN.msi.zip"
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUZngwdjNaa2lxQlFZbjRBcEtKMEc5Z2VlcDdWeXRkMEVtTGtWZ1lsdElxUDlzc2NBM1B4bFFCOWRSejRPTUhsTmRJNlYxS1JyMlh6eERsM1plYlFLVlBySmRWRlpEU1FJPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzIyODU3NjQ3CWZpbGU6TWluQXBpXzQuNC4wX3g2NF96aC1DTi5tc2kuemlwCk10NDFDSDN5VWZ2WUpjRWVOOUNlZjlBaVFzVEhnT2hDTDY3SzlYdlVqa2htWmtzcEQ5bWl4VGJrR205WVk3Yk5qM0FtY3prekFpaW9QM2RQWFhLc0RnPT0K",
+      "url": "https://github.com/tive6/min-api/releases/download/app-v4.4.0/MinApi_4.4.0_x64_zh-CN.msi.zip"
     }
   }
 }

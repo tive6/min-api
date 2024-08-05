@@ -45,6 +45,7 @@ async function getLatestRelease() {
         // access_token: GITEE_TOKEN,
       },
     })
+    console.log('latest', data)
     let item = data?.assets?.find((item) => item.name === filename)
     let fileUrl = item?.browser_download_url
     return fileUrl
