@@ -1,5 +1,12 @@
 
 
+## [4.4.1](https://github.com/tive6/min-api/compare/4.4.0...4.4.1) (2024-08-05)
+
+
+###   Continuous Integration | CI 配置
+
+* 调整 actions 工作流触发时机：master push -> release published ([4bb7b4b](https://github.com/tive6/min-api/commit/4bb7b4b652be2cf2d3b5174de98936fa9ce71a45))
+
 ## [4.4.0](https://github.com/tive6/min-api/compare/4.3.19...4.4.0) (2024-08-05)
 
 
