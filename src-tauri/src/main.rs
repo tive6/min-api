@@ -2,6 +2,8 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 use tauri::{Manager, CustomMenuItem, Menu, MenuItem, Submenu};
 
+use tauri_plugin_log::{LogTarget};
+
 // Learn more about Tauri commands at https://tauri.app/v1/guides/features/command
 #[tauri::command]
 fn greet(name: &str) -> String {
@@ -21,6 +23,11 @@ fn main() {
 
   // let menu = Menu::new(); // configure the menu
   tauri::Builder::default()
+        .plugin(tauri_plugin_log::Builder::default().targets([
+            LogTarget::LogDir,
+            LogTarget::Stdout,
+            LogTarget::Webview,
+        ]).build())
         .setup(|_app| {
               #[cfg(debug_assertions)] // only include this code on debug builds
               {

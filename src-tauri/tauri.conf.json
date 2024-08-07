@@ -13,13 +13,18 @@
   "tauri": {
     "allowlist": {
       "all": false,
+      "app": {
+        "all": true,
+        "show": true,
+        "hide": true
+      },
       "window": {
         "all": true,
         "startDragging": true
       },
       "shell": {
         "all": false,
-        "open": true
+        "open": "^((https?://\\w+)|(chrome://\\w+)).+"
       },
       "http": {
         "all": true,

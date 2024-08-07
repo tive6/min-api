@@ -102,3 +102,24 @@ a {
   font-size: 16px;
   cursor: pointer;
 }
+
+.flex {
+  display: flex;
+}
+
+.items-center {
+  display: flex;
+  align-items: center;
+}
+
+.justify-end {
+  justify-content: flex-end;
+}
+
+.ml-10 {
+  margin-left: 10px;
+}
+
+.mt-20 {
+  margin-top: 20px;
+}
