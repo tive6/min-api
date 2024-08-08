@@ -1,5 +1,22 @@
 
 
+## [4.5.0](https://github.com/tive6/min-api/compare/4.4.1...4.5.0) (2024-08-08)
+
+
+### ✨ Features | 新功能
+
+* 增加 log 功能，增加自定义更新逻辑及更新展示 ([af53c05](https://github.com/tive6/min-api/commit/af53c0505a5b8c453b697980919cb9cd93fd2df8))
+
+
+###   Chores | 其他更新
+
+* Release v4.4.1 ([3bd95ab](https://github.com/tive6/min-api/commit/3bd95ab363812afcc55f090722f13a4b386df220))
+
+
+### ⚡ Performance Improvements | 性能优化
+
+* 优化自动更新流程，优化顶部布局 ([1dc3970](https://github.com/tive6/min-api/commit/1dc39706cab69d9a9d487cb6f9b8fdca589ac549))
+
 ## [4.4.1](https://github.com/tive6/min-api/compare/4.4.0...4.4.1) (2024-08-05)
 
 
