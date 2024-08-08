@@ -8,7 +8,7 @@
   },
   "package": {
     "productName": "MinApi",
-    "version": "4.4.1"
+    "version": "4.4.0"
   },
   "tauri": {
     "allowlist": {
@@ -121,8 +121,8 @@
         "fullscreen": false,
         "resizable": true,
         "title": "MinApi",
-        "width": 900,
-        "height": 700,
+        "width": 1024,
+        "height": 800,
         "decorations": true,
         "skipTaskbar": false,
         "hiddenTitle": false,

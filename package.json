@@ -27,6 +27,7 @@
     "ahooks": "^3.7.7",
     "antd": "^5.6.2",
     "jsoneditor": "8",
+    "localforage": "^1.10.0",
     "lodash-es": "^4.17.21",
     "path-browserify": "^1.0.1",
     "prop-types": "^15.8.1",

@@ -55,8 +55,22 @@ export const MethodOptions = [
 ]
 
 export const layout = {
-  labelCol: { span: 0 },
-  wrapperCol: { span: 24 },
+  labelCol: {
+    style: {
+      width: 0,
+    },
+  },
+  wrapperCol: {
+    style: {
+      flex: 1,
+    },
+  },
+}
+
+export const formItemStyle = {
+  style: {
+    width: '100%',
+  },
 }
 
 export const testUrl = 'https://dog.ceo/api/breeds/image/random'

@@ -18,12 +18,12 @@ import {
 } from './common/helper'
 import { getRandomKey } from './common/helper'
 import DataTab from './components/dataTab'
-import HandleBar from './components/handleBar.jsx'
-import HistorySearch from './components/historySearch.jsx'
+import HandleBar from './components/handleBar'
+import HistorySearch from './components/historySearch'
 import HistoryTab from './components/historyTab'
 import ParamsFormTab from './components/paramsFormTab'
 import ParamsJsonTab from './components/paramsJsonTab'
-import SubTabBarExtra from './components/subTabBarExtra.jsx'
+import SubTabBarExtra from './components/subTabBarExtra'
 import { useStore } from './store/index.js'
 const { Option } = Select
 
@@ -59,7 +59,7 @@ const Content = () => {
   const [reqHeaders, setReqHeaders] = useState({})
   const [method, setMethod] = useState('GET')
   const [resAllJson, setAllResJson] = useState({})
-  const [tabKey, setTabKey] = useState('1')
+  const [tabKey, setTabKey] = useState('6')
   const [status, setStatus] = useState(0)
   const [loading, setLoading] = useState(false)
 
@@ -491,30 +491,53 @@ const Content = () => {
   return (
     <div className="app-content">
       <HandleBar />
-      <Form
-        form={headForm}
-        {...layout}
-        initialValues={{ url, method }}
-        name="basic"
-        layout="inline"
-        size="large"
-      >
-        <Form.Item label="" name="url">
-          <Input
-            allowClear
-            addonBefore={prefixSelector}
-            style={{ width: '65vw' }}
-            onBlur={inputOnBlur}
-            onPressEnter={inputOnEnter}
-            placeholder="请输入url，例：https://test.cn"
-          />
-        </Form.Item>
-        <Form.Item>
-          <Button loading={loading} onClick={send} type="primary" icon={<SendOutlined />} block>
-            发送
-          </Button>
-        </Form.Item>
-      </Form>
+      <div className="body-top">
+        <Form
+          form={headForm}
+          {...layout}
+          initialValues={{ url, method }}
+          name="basic"
+          layout="inline"
+          size="large"
+          className="body-top-form"
+        >
+          <Form.Item className="form-item-input" name="url">
+            <Input
+              allowClear
+              addonBefore={prefixSelector}
+              style={{ width: '100%' }}
+              onBlur={inputOnBlur}
+              onPressEnter={inputOnEnter}
+              placeholder="请输入url，例：https://test.cn"
+            />
+          </Form.Item>
+          <Form.Item className="form-item-btn">
+            <Button loading={loading} onClick={send} type="primary" icon={<SendOutlined />} block>
+              发送
+            </Button>
+          </Form.Item>
+        </Form>
+        <div className="head-menu">
+          {/*<Popover*/}
+          {/*  content="管理 环境变量 / 全局变量 / 全局参数"*/}
+          {/*  // placement="bottomRight"*/}
+          {/*  title=""*/}
+          {/*>*/}
+          {/*  <Button*/}
+          {/*    className="form-item-btn"*/}
+          {/*    type="link"*/}
+          {/*    disabled*/}
+          {/*    icon={*/}
+          {/*      <ControlOutlined*/}
+          {/*        style={{*/}
+          {/*          fontSize: 20,*/}
+          {/*        }}*/}
+          {/*      />*/}
+          {/*    }*/}
+          {/*  ></Button>*/}
+          {/*</Popover>*/}
+        </div>
+      </div>
 
       <Tabs
         tabBarExtraContent={{

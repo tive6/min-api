@@ -5,10 +5,23 @@ import { open } from '@tauri-apps/api/shell'
 import { checkUpdate, installUpdate, onUpdaterEvent } from '@tauri-apps/api/updater'
 import { useReactive } from 'ahooks'
 import { Button, notification } from 'antd'
+import localforage from 'localforage'
 import { useEffect } from 'react'
-import { attachConsole, error, info, trace } from 'tauri-plugin-log-api'
+import { attachConsole, info } from 'tauri-plugin-log-api'
 
+import { SkipVersion } from './common/consts.js'
 import Content from './content'
+
+localforage.config({
+  driver: localforage.INDEXEDDB, // 选择存储引擎，例如 localStorage
+  name: 'min-api-data', // 定义存储的数据库名称
+  version: 1.0, // 设置数据库版本
+  storeName: 'keyvaluepairs', // 定义存储数据的仓库名称
+  description: 'min-api-data', // 设置数据库描述
+  size: 5 * 1024 * 1024,
+})
+
+// info.bind(null, JSON.stringify(arguments))
 
 function App() {
   const [api, contextHolder] = notification.useNotification()
@@ -53,24 +66,39 @@ function App() {
               查看
             </Button>
           </div>
-          <div className="items-center justify-end mt-20">
-            <Button onClick={cancel} size="small" className="ml-10">
-              取消
+          <div className="items-center justify-between mt-20">
+            <Button onClick={jumpVer.bind(null, version)} size="small">
+              跳过这个版本
             </Button>
-            <Button
-              loading={d.loading}
-              // disabled={d.loading}
-              onClick={startUpdate}
-              type="primary"
-              size="small"
-              className="ml-10"
-            >
-              开始安装并重启
-            </Button>
+            <div className="flex">
+              <Button onClick={cancel} size="small" className="ml-10">
+                下次再说
+              </Button>
+              <Button
+                loading={d.loading}
+                // disabled={d.loading}
+                onClick={startUpdate}
+                type="primary"
+                size="small"
+                className="ml-10"
+              >
+                开始安装并重启
+              </Button>
+            </div>
           </div>
         </div>
       ),
     })
+  }
+
+  async function jumpVer(version) {
+    try {
+      await localforage.setItem(SkipVersion, version)
+      cancel()
+    } catch (e) {
+      console.log(e)
+      info(e)
+    }
   }
 
   async function viewRelease() {
@@ -88,6 +116,7 @@ function App() {
     try {
       info('start installUpdate')
       await installUpdate()
+      // await startInstall()
     } catch (e) {
       info(e)
     }
@@ -102,32 +131,32 @@ function App() {
 
   useEffect(() => {
     let unlisten = null
+    let detach = null
 
     async function main() {
       // with LogTarget::Webview enabled this function will print logs to the browser console
-      const detach = await attachConsole()
+      detach = await attachConsole()
 
-      trace('Trace')
-      info('Info')
-      error('Error')
-
-      // detach the browser console from the log stream
-      detach()
+      // trace('Trace')
+      // info('Info')
+      // error('Error')
+      info('test app 4.2')
 
       try {
         unlisten = await onUpdaterEvent(({ error, status }) => {
           // This will log all updater events, including status updates and errors.
           console.log('Updater event', { error }, { status })
           d.loading = status === 'PENDING'
-          if (d.status !== 'DOWNLOADED' && status === 'DOWNLOADED') {
+          if (d.status !== 'DONE' && status === 'DONE') {
             d.status = status
             startInstall()
           }
         })
 
         const { shouldUpdate, manifest } = await checkUpdate()
-
-        if (shouldUpdate) {
+        let skipVersion = await localforage.getItem(SkipVersion)
+        console.log({ skipVersion })
+        if (shouldUpdate && manifest?.version !== skipVersion) {
           // You could show a dialog asking the user if they want to install the update here.
           console.log(
             `Installing update ${manifest?.version}, ${manifest?.date}, ${manifest?.body}`
@@ -136,6 +165,7 @@ function App() {
         }
       } catch (e) {
         console.log(e)
+        info(e)
       }
     }
 
@@ -143,6 +173,8 @@ function App() {
 
     return () => {
       unlisten && unlisten()
+      // detach the browser console from the log stream
+      detach && detach()
     }
   }, [])
   return (

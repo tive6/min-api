@@ -1,10 +1,10 @@
 {
-  "version": "4.4.1",
-  "notes": "有更新啦😄",
-  "pub_date": "2024-08-07T12:13:21.252Z",
+  "version": "4.4.2",
+  "notes": "有更新啦...1...😄",
+  "pub_date": "2024-08-07T13:13:21.252Z",
   "platforms": {
     "darwin-aarch64": {
-      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUZngwdjNaa2lxQmJYd3FRSWpYWUJBcE1IK01ZSGVwalZxOEszOXNkU2pydm03V2UzYnFWam1KZEtnbDlwUUkrWFBodnI2VnVtc3BoOXNGRVVCdHFHNmFMVG9rTkRteWdzPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzIzMDE0MzcxCWZpbGU6TWluQXBpLmFwcC50YXIuZ3oKOEYyOTUxOFhnaW14dktydktua1EzdXF4dVVHUTcxSnNLWWVySU5uTzRBNzd2YldnaCt3dFZERnhBVVlPRndsUnJnVVRoclJqcFdJVlpZdXNhc3RuQWc9PQo=",
+      "signature": "dW50cnVzdGVkIGNvbW1lbnQ6IHNpZ25hdHVyZSBmcm9tIHRhdXJpIHNlY3JldCBrZXkKUlVUZngwdjNaa2lxQlpLTEZpdTk1amh0dE5TVEdVbVRDd0QrczFtc3NCdGZqdHgvckZNVXdtUUxRcWdYMkw1WDlkYlhmTFVOMHlwZ08wOENKMU1OWEVMaml6L1FyVVYrVFFRPQp0cnVzdGVkIGNvbW1lbnQ6IHRpbWVzdGFtcDoxNzIzMDE2MjU5CWZpbGU6TWluQXBpLmFwcC50YXIuZ3oKcHc4MStSNEd3VFFFb0VSaVVlNm1ucS83VDRibjlrTHVQNnZqd01oV3FtSENrMG9sQnpZRUVvVEorVWI1VUxrTkExRnJUaENQTDVaRUgya1VhYy8vQWc9PQo=",
       "url": "https://gitee.com/tive/post-tools-tauri/releases/download/4.3.4/MinApi.app.tar.gz"
     },
     "darwin-x86_64": {

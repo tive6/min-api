@@ -112,6 +112,10 @@ a {
   align-items: center;
 }
 
+.justify-between {
+  justify-content: space-between;
+}
+
 .justify-end {
   justify-content: flex-end;
 }
@@ -122,4 +126,31 @@ a {
 
 .mt-20 {
   margin-top: 20px;
+}
+
+.body-top {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.body-top-form {
+  flex: 1;
+}
+
+.form-item-input {
+  width: calc(100% - 130px);
+  //margin-right: 10px;
+  margin-inline-end: 10px !important;
+}
+
+.form-item-btn {
+  //width: calc(100% - 150px);
+  width: auto;
+  padding: 0;
+
+  &.ant-btn-link {
+    width: auto;
+  }
 }
