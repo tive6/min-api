@@ -139,4 +139,16 @@ export const contentTypeOptions = [
     label: 'multipart/form-data',
     value: 'multipart/form-data',
   },
+  {
+    label: 'text/plain',
+    value: 'text/plain',
+  },
+  {
+    label: 'application/xml',
+    value: 'application/xml',
+  },
+  {
+    label: 'text/xml',
+    value: 'text/xml',
+  },
 ]
