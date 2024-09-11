@@ -1,6 +1,6 @@
-import { SendOutlined } from '@ant-design/icons'
+import { ControlOutlined, SendOutlined } from '@ant-design/icons'
 import { useDebounceEffect, useReactive } from 'ahooks'
-import { Badge, Button, Form, Input, notification, Select, Tabs } from 'antd'
+import { Badge, Button, Form, Input, notification, Popover, Select, Tabs } from 'antd'
 import localforage from 'localforage'
 import { useEffect, useRef, useState } from 'react'
 
@@ -68,7 +68,7 @@ const Content = () => {
   useEffect(() => {
     if (method === 'GET') {
       let { queryArr } = queryToObj(url)
-      console.log(queryArr)
+      // console.log(queryArr)
       let obj = arrToObj(queryArr)
       setQueryParams(obj)
     }
@@ -80,7 +80,7 @@ const Content = () => {
         count.params = 0
         return
       }
-      console.log(params)
+      // console.log(params)
       let obj = arrToObj(params)
       setReqParams(obj)
       count.params = params.length
@@ -111,7 +111,7 @@ const Content = () => {
         count.headers = 0
         return
       }
-      console.log(headers)
+      // console.log(headers)
       let obj = arrToObj(headers)
       setReqHeaders(obj)
       count.headers = headers.length
@@ -138,7 +138,7 @@ const Content = () => {
 
   const inputOnBlur = () => {
     let { url } = headForm.getFieldsValue()
-    console.log(url)
+    // console.log(url)
     setUrl(url)
   }
 
@@ -152,7 +152,6 @@ const Content = () => {
       let list = await getLocalHistoryList()
       list.push(opts)
       await localforage.setItem(historyKey, list)
-      console.log(historySearchRef?.current)
       historySearchRef?.current?.search()
       setHistoryList(list)
     } catch (e) {
@@ -162,7 +161,7 @@ const Content = () => {
 
   const initFormData = (data) => {
     headForm.setFieldsValue(data)
-    console.log(headForm.getFieldsValue())
+    console.log('initFormData', headForm.getFieldsValue())
   }
 
   const httpHandle = async (p) => {
@@ -180,11 +179,10 @@ const Content = () => {
         return
       }
       let res = await http(p)
-      console.log(res)
+      console.log('http res', res)
       let { url, config, data, headers, status, statusText } = res
-      // console.log(request)
-      console.log(store.requestType)
-      console.log(res.data)
+      console.log('requestType', store.requestType)
+      console.log('http res data', res.data)
       if (store.requestType !== 'download') {
         try {
           // 尝试解析 json
@@ -206,9 +204,9 @@ const Content = () => {
       state = 1
       // console.log(headers)
       if (status === 200 && data && store.requestType === 'download') {
-        console.log('download')
+        console.log('downloadFile start')
         let err = await downloadFile({ url, data, headers })
-        console.log(err)
+        console.log('downloadFile err', err)
         if (err) {
           data = err
           that.resData = err
@@ -223,8 +221,8 @@ const Content = () => {
         // request,
       })
     } catch (err) {
-      console.log(p)
-      console.log(err)
+      console.log('http options', p)
+      console.log('http err', err)
       notification.error({
         message: '提醒',
         description: `请求失败！`,
@@ -232,7 +230,7 @@ const Content = () => {
       setTabKey('4')
       setAllResJson(err)
     } finally {
-      console.log('finally')
+      console.log('http finally')
       if (store.requestType === 'upload') {
         Reflect.deleteProperty(opts.data, that.fileKey)
       }
@@ -253,7 +251,6 @@ const Content = () => {
       that.resData = []
       setTabKey('5')
       await processStream(reader, (str) => {
-        // console.log(str)
         that.resData = [...that.resData, str]
       })
       // console.log(headers.entries())
@@ -271,10 +268,10 @@ const Content = () => {
         type,
         url,
       })
-      console.log(res)
+      console.log('fetchOfStream res', res)
       return status === 200 ? 1 : 0
     } catch (e) {
-      console.log(e)
+      console.log('fetchOfStream err', e)
       return 0
     }
   }
@@ -337,7 +334,7 @@ const Content = () => {
       }
 
       if (store.requestType === 'upload') {
-        console.log(currentFile.current)
+        console.log('currentFile', currentFile.current)
         if (!currentFile.current) {
           notification.warning({
             message: '提醒',
@@ -357,7 +354,7 @@ const Content = () => {
           mime: type,
           fileName: name,
         }
-        console.log(p.data)
+        console.log('upload data', p.data)
         // let formData = new FormData()
         // formData.append(
         //   'file',
@@ -537,24 +534,24 @@ const Content = () => {
           </Form.Item>
         </Form>
         <div className="head-menu">
-          {/*<Popover*/}
-          {/*  content="管理 环境变量 / 全局变量 / 全局参数"*/}
-          {/*  // placement="bottomRight"*/}
-          {/*  title=""*/}
-          {/*>*/}
-          {/*  <Button*/}
-          {/*    className="form-item-btn"*/}
-          {/*    type="link"*/}
-          {/*    disabled*/}
-          {/*    icon={*/}
-          {/*      <ControlOutlined*/}
-          {/*        style={{*/}
-          {/*          fontSize: 20,*/}
-          {/*        }}*/}
-          {/*      />*/}
-          {/*    }*/}
-          {/*  ></Button>*/}
-          {/*</Popover>*/}
+          <Popover
+            content="管理 环境变量 / 全局变量 / 全局参数"
+            // placement="bottomRight"
+            title=""
+          >
+            <Button
+              className="form-item-btn"
+              type="link"
+              // disabled
+              icon={
+                <ControlOutlined
+                  style={{
+                    fontSize: 20,
+                  }}
+                />
+              }
+            ></Button>
+          </Popover>
         </div>
       </div>
 

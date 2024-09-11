@@ -3,7 +3,7 @@ import { Body, fetch as client, ResponseType } from '@tauri-apps/api/http'
 import { mergeHeaders } from '../common/helper.js'
 
 export const defaultHeaders = {
-  'user-agent': 'GetTools/Tauri-fetch-3.0.0', // 添加自定义的 User-Agent 头部
+  'user-agent': 'Min-Api/Tauri-fetch-4.0.0', // 添加自定义的 User-Agent 头部
   // 'content-type': 'application/json',
 }
 
@@ -12,7 +12,8 @@ export const http = (opts = {}) => {
   return new Promise((resolve, reject) => {
     const { url, method, params, data, requestType, headers, callback } = opts
     let { contentType, header } = mergeHeaders(headers, requestType)
-    console.log({ header, data })
+    console.log('http options header', header)
+    console.log('http options data', data)
     let body = null
     if (contentType === 'form') {
       body = Body.form(data)
@@ -25,8 +26,8 @@ export const http = (opts = {}) => {
     if (requestType === 'download') {
       responseType = ResponseType.Binary
     }
-    console.log('响应类型', responseType === 3 ? 'Binary' : 'TEXT')
-    console.log({ body })
+    console.log('responseType', responseType === 3 ? 'Binary' : 'TEXT')
+    console.log('http body', body)
     client(url, {
       method: method || 'GET',
       headers: header,
@@ -51,7 +52,9 @@ export const stream = (opts = {}) => {
   return new Promise((resolve, reject) => {
     const { url, method, params, data, requestType, headers, callback } = opts
     let { contentType, header } = mergeHeaders(headers)
-    console.log({ contentType, header, data })
+    console.log('stream options contentType', contentType)
+    console.log('stream options header', header)
+    console.log('stream options data', data)
     let body = null
     if (!['GET', 'HEAD'].includes(method)) {
       body = JSON.stringify(data || {})
