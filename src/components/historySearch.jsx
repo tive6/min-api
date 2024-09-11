@@ -14,13 +14,17 @@ const Com = forwardRef((props, ref) => {
   const inputRef = useRef()
   const store = useStore()
 
-  function search() {
-    store.page = 1
-    let kw = store.keywords.trim()
-    console.log({ kw })
-    const localHistoryList = getLocalHistoryList()
-    let list = localHistoryList.filter((item) => JSON.stringify(item).includes(kw))
-    setHistoryList(list)
+  async function search() {
+    try {
+      store.page = 1
+      let kw = store.keywords.trim()
+      console.log({ kw })
+      const localHistoryList = await getLocalHistoryList()
+      let list = localHistoryList.filter((item) => JSON.stringify(item).includes(kw))
+      setHistoryList(list)
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   useKeyPress(

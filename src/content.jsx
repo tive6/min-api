@@ -1,6 +1,7 @@
 import { SendOutlined } from '@ant-design/icons'
 import { useDebounceEffect, useReactive } from 'ahooks'
 import { Badge, Button, Form, Input, notification, Select, Tabs } from 'antd'
+import localforage from 'localforage'
 import { useEffect, useRef, useState } from 'react'
 
 import { http, stream } from './api/ajax'
@@ -8,7 +9,7 @@ import { DefaultRequestType, historyKey, layout, MethodOptions, testUrl } from '
 import {
   arrToObj,
   downloadFile,
-  fileToArrayBuffer,
+  fileToUint8Array,
   formatFixedDate,
   getLocalHistoryList,
   numbersArrayToText,
@@ -24,7 +25,7 @@ import HistoryTab from './components/historyTab'
 import ParamsFormTab from './components/paramsFormTab'
 import ParamsJsonTab from './components/paramsJsonTab'
 import SubTabBarExtra from './components/subTabBarExtra'
-import { useStore } from './store/index.js'
+import { setHistoryList, useStore } from './store/index.js'
 const { Option } = Select
 
 const Content = () => {
@@ -48,6 +49,7 @@ const Content = () => {
     resJsonData: {},
     isUpload: false,
     resData: '',
+    fileKey: '',
   })
 
   const [params, setParams] = useState([])
@@ -145,11 +147,17 @@ const Content = () => {
     send()
   }
 
-  const setHistoryData = (opts) => {
-    let list = getLocalHistoryList()
-    list.push(opts)
-    window.localStorage.setItem(historyKey, JSON.stringify(list))
-    historySearchRef?.current?.search()
+  const setHistoryData = async (opts) => {
+    try {
+      let list = await getLocalHistoryList()
+      list.push(opts)
+      await localforage.setItem(historyKey, list)
+      console.log(historySearchRef?.current)
+      historySearchRef?.current?.search()
+      setHistoryList(list)
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   const initFormData = (data) => {
@@ -225,6 +233,9 @@ const Content = () => {
       setAllResJson(err)
     } finally {
       console.log('finally')
+      if (store.requestType === 'upload') {
+        Reflect.deleteProperty(opts.data, that.fileKey)
+      }
       setHistoryData({
         ...opts,
         status: state,
@@ -335,16 +346,24 @@ const Content = () => {
           return false
         }
         let { name, type } = currentFile.current
-        let arrayBuffer = await fileToArrayBuffer(currentFile.current)
-        console.log(p.data)
-        p.data['file'] = {
-          file: arrayBuffer,
+        let uint8Array = await fileToUint8Array(currentFile.current)
+        // let arrayBuffer = await currentFile.current.arrayBuffer()
+        let fileKey = p.data.file || 'file'
+        that.fileKey = fileKey
+        Reflect.deleteProperty(p.data, 'file')
+        p.data[fileKey] = {
+          file: uint8Array, // or filepath
+          // file: `/Users/xxx/Downloads/${currentFile.current.name}`,
           mime: type,
           fileName: name,
         }
+        console.log(p.data)
         // let formData = new FormData()
-        // console.log(currentFile.current)
-        // formData.append('file', currentFile.current, `/Users/tiven/Downloads/${currentFile.current.name}`)
+        // formData.append(
+        //   'file',
+        //   currentFile.current,
+        //   `/Users/xxx/Downloads/${currentFile.current.name}`
+        // )
         // p.data = formData
       }
     }

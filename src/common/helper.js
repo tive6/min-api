@@ -1,6 +1,7 @@
 import { open, save } from '@tauri-apps/api/dialog'
 import { readTextFile, writeBinaryFile, writeTextFile } from '@tauri-apps/api/fs'
 import { downloadDir } from '@tauri-apps/api/path'
+import localforage from 'localforage'
 import { parse } from 'path-browserify'
 
 import { defaultHeaders } from '../api/ajax.js'
@@ -147,12 +148,12 @@ export const mergeHeaders = (headers = {}, requestType) => {
   }
 }
 
-export const fileToArrayBuffer = (file) => {
+export const fileToUint8Array = (file) => {
   return new Promise((resolve) => {
     let reader = new FileReader()
     reader.readAsArrayBuffer(file)
     reader.onload = (e) => {
-      resolve(e.target.result)
+      resolve(new Uint8Array(e.target.result))
     }
   })
 }
@@ -285,15 +286,19 @@ export async function processStream(reader, cb) {
   }
 }
 
-export const getLocalHistoryList = () => {
-  let list = window.localStorage.getItem(historyKey)
-  list = list ? JSON.parse(list) : []
-  return list
+export const getLocalHistoryList = async () => {
+  try {
+    let list = await localforage.getItem(historyKey)
+    return list || []
+  } catch (e) {
+    console.log(e)
+    return []
+  }
 }
 
 export async function exportHistory() {
   try {
-    let list = getLocalHistoryList()
+    let list = await getLocalHistoryList()
     let filename = `get-tools-history-${Date.now()}`
     const filePath = await save({
       title: `Save ${filename}`,
@@ -336,9 +341,9 @@ export async function importHistory() {
     })
     let list = JSON.parse(res)
     console.log(list)
-    let localList = getLocalHistoryList()
+    let localList = await getLocalHistoryList()
     let allList = [...localList, ...list]
-    window.localStorage.setItem(historyKey, JSON.stringify(allList))
+    await localforage.setItem(historyKey, allList)
     setHistoryList(allList)
   } catch (e) {
     console.log(e)

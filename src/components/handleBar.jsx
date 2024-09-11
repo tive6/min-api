@@ -8,6 +8,7 @@ import {
 } from '@ant-design/icons'
 import { relaunch } from '@tauri-apps/api/process'
 import { FloatButton, notification } from 'antd'
+import localforage from 'localforage'
 
 import { historyKey } from '../common/config.js'
 import { exportHistory, importHistory } from '../common/helper.js'
@@ -22,7 +23,7 @@ const Com = () => {
   }
   async function cleanHistory() {
     try {
-      window.localStorage.removeItem(historyKey)
+      await localforage.removeItem(historyKey)
       notification.success({
         message: '提醒',
         description: '清除完成！',

@@ -1,4 +1,5 @@
 import { Space, Table } from 'antd'
+import localforage from 'localforage'
 import propTypes from 'prop-types'
 import { useEffect } from 'react'
 
@@ -12,13 +13,17 @@ const ContentTab = ({ onQueryChange }) => {
 
   const { historyBaseColumns } = useBaseConfig()
 
-  const deleteRow = (row) => {
-    console.log(row.key)
-    const localHistoryList = getLocalHistoryList()
-    let list = localHistoryList.filter((item) => item.key !== row.key)
-    window.localStorage.setItem(historyKey, JSON.stringify(list))
-    let historyList = store.historyList.filter((item) => item.key !== row.key)
-    setHistoryList(historyList)
+  const deleteRow = async (row) => {
+    try {
+      console.log(row.key)
+      const localHistoryList = await getLocalHistoryList()
+      let list = localHistoryList.filter((item) => item.key !== row.key)
+      await localforage.setItem(historyKey, list)
+      let historyList = store.historyList.filter((item) => item.key !== row.key)
+      setHistoryList(historyList)
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   const columns = [
@@ -56,8 +61,11 @@ const ContentTab = ({ onQueryChange }) => {
   }
 
   useEffect(() => {
-    const localHistoryList = getLocalHistoryList()
-    setHistoryList(localHistoryList)
+    async function main() {
+      const localHistoryList = await getLocalHistoryList()
+      setHistoryList(localHistoryList)
+    }
+    main()
   }, [])
 
   return (

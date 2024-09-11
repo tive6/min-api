@@ -13,15 +13,14 @@ import { SkipVersion } from './common/consts.js'
 import Content from './content'
 
 localforage.config({
-  driver: localforage.INDEXEDDB, // 选择存储引擎，例如 localStorage
+  // 选择存储引擎: INDEXEDDB、LOCALSTORAGE、WEBSQL
+  driver: localforage.INDEXEDDB,
   name: 'min-api-data', // 定义存储的数据库名称
   version: 1.0, // 设置数据库版本
-  storeName: 'keyvaluepairs', // 定义存储数据的仓库名称
+  storeName: 'local-data', // 定义存储数据的仓库名称(相当于表名)
   description: 'min-api-data', // 设置数据库描述
-  size: 5 * 1024 * 1024,
+  size: 50 * 1024 * 1024,
 })
-
-// info.bind(null, JSON.stringify(arguments))
 
 function App() {
   const [api, contextHolder] = notification.useNotification()
@@ -140,7 +139,7 @@ function App() {
       // trace('Trace')
       // info('Info')
       // error('Error')
-      info('test app 4.2')
+      info('app start')
 
       try {
         unlisten = await onUpdaterEvent(({ error, status }) => {

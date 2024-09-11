@@ -225,13 +225,12 @@ const ParamsFormTab = forwardRef(({ setCurrentFile, name, onDataChange }, ref) =
   )
 
   function handleUpload(file) {
-    console.log(file)
-    setCurrentFile(file)
+    // console.log(file)
     return false
   }
 
   function onFileChange({ fileList }) {
-    console.log(fileList)
+    console.log('current fileList', fileList)
     if (fileList.length) {
       let file = fileList?.[0]?.originFileObj || null
       setCurrentFile(file)
@@ -239,32 +238,6 @@ const ParamsFormTab = forwardRef(({ setCurrentFile, name, onDataChange }, ref) =
       setCurrentFile(null)
     }
   }
-
-  // useEffect(() => {
-  //   let unlisten = null
-  //   async function main() {
-  //     try {
-  //       unlisten = await appWindow.onFileDropEvent((event) => {
-  //         if (event.payload.type === 'hover') {
-  //           console.log('User hovering', event.payload.paths)
-  //         } else if (event.payload.type === 'drop') {
-  //           console.log('User dropped', event.payload.paths)
-  //         } else {
-  //           console.log('File drop cancelled')
-  //         }
-  //       })
-  //     } catch (e) {
-  //       console.log(e)
-  //     }
-  //   }
-  //
-  //   main()
-  //
-  //   return () => {
-  //     // you need to call unlisten if your handler goes out of scope e.g. the component is unmounted
-  //     unlisten()
-  //   }
-  // }, [])
 
   return (
     <Form
@@ -287,10 +260,10 @@ const ParamsFormTab = forwardRef(({ setCurrentFile, name, onDataChange }, ref) =
             <Button size="small" onClick={addTr} type="primary" icon={<PlusOutlined />} />
             {store.requestType === 'upload' && name === 'ParamsFormTab' && (
               <Dragger
-                handleUpload={handleUpload}
-                // showUploadList={false}
-                action="#"
+                multiple={false}
+                maxCount={1}
                 className="dragger-box"
+                beforeUpload={handleUpload}
                 onChange={onFileChange}
               >
                 <p className="ant-upload-drag-icon">
