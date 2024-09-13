@@ -1,6 +1,6 @@
 import { Body, fetch as client, ResponseType } from '@tauri-apps/api/http'
 
-import { mergeHeaders } from '../common/helper.js'
+import { getHeaders, mergeHeaders } from '../common/helper.js'
 
 export const defaultHeaders = {
   'user-agent': 'Min-Api/Tauri-fetch-4.0.0', // 添加自定义的 User-Agent 头部
@@ -11,7 +11,13 @@ export const defaultHeaders = {
 export const http = (opts = {}) => {
   return new Promise((resolve, reject) => {
     const { url, method, params, data, requestType, headers, callback } = opts
-    let { contentType, header } = mergeHeaders(headers, requestType)
+    let { contentType, header } = mergeHeaders(
+      {
+        ...getHeaders(),
+        ...headers,
+      },
+      requestType
+    )
     console.log('http options header', header)
     console.log('http options data', data)
     let body = null
@@ -66,6 +72,7 @@ export const stream = (opts = {}) => {
       method: method || 'GET',
       headers: {
         'content-type': 'application/json',
+        ...getHeaders(),
         ...defaultHeaders,
         ...headers,
       },

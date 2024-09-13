@@ -5,7 +5,7 @@ import localforage from 'localforage'
 import { parse } from 'path-browserify'
 
 import { defaultHeaders } from '../api/ajax.js'
-import { setHistoryList } from '../store/index.js'
+import { getHeaderList, setHistoryList } from '../store/index.js'
 import { ContentTypeMap, historyKey } from './config.js'
 
 export const formatFixedDate = (date, fmt) => {
@@ -299,7 +299,7 @@ export const getLocalHistoryList = async () => {
 export async function exportHistory() {
   try {
     let list = await getLocalHistoryList()
-    let filename = `get-tools-history-${Date.now()}`
+    let filename = `min-api-history-${Date.now()}`
     const filePath = await save({
       title: `Save ${filename}`,
       defaultPath: filename,
@@ -397,4 +397,15 @@ export function HeadersFirstRowHandle(arr = []) {
     }
   }
   return arr
+}
+
+export function getHeaders() {
+  let headers = getHeaderList()
+  let obj = {}
+  headers.forEach(({ k, v, enable }) => {
+    if (enable) {
+      obj[k] = v
+    }
+  })
+  return obj
 }

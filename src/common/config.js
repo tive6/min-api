@@ -22,6 +22,7 @@ export const columnsArr = [
 ]
 
 export const historyKey = 'request-history-list'
+export const headersKey = 'request-headers'
 
 export const MethodOptions = [
   {
@@ -152,3 +153,54 @@ export const contentTypeOptions = [
     value: 'text/xml',
   },
 ]
+
+export const HeaderOpts = [
+  'Accept',
+  'Accept-Charset',
+  'Accept-Encoding',
+  'Accept-Language',
+  'Accept-Datetime',
+  'Authorization',
+  'Cache-Control',
+  'Connection',
+  'Content-Length',
+  'Content-MD5',
+  'Content-Type',
+  'Date',
+  'Expect',
+  'Forwarded',
+  'From',
+  'Host',
+  'If-Match',
+  'If-Modified-Since',
+  'If-None-Match',
+  'If-Range',
+  'If-Unmodified-Since',
+  'Max-Forwards',
+  'Origin',
+  'Pragma',
+  'Proxy-Authorization',
+  'Range',
+  'Referer',
+  'TE',
+  'User-Agent',
+  'Upgrade',
+  'Via',
+  'Warning',
+  'X-Requested-With',
+  'DNT',
+  'X-Forwarded-For',
+  'X-Forwarded-Host',
+  'X-Forwarded-Proto',
+  'Front-End-Https',
+  'access-control-request-headers',
+  'access-control-request-method',
+  'Cookie',
+  'Cookie2',
+  'Date',
+  'keep-alive',
+  'Te',
+  'Trailer',
+  'Transfer-Encoding',
+  'x-api-key',
+].map((k) => ({ label: k, value: k, desc: '**' }))

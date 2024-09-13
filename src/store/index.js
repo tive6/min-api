@@ -1,8 +1,9 @@
+import localforage from 'localforage'
 import { cloneDeep } from 'lodash-es'
 import { proxy } from 'valtio'
 import { useProxy } from 'valtio/utils'
 
-import { DefaultRequestType } from '../common/config.js'
+import { DefaultRequestType, headersKey } from '../common/config.js'
 
 export const defaultData = {
   requestType: DefaultRequestType,
@@ -11,6 +12,7 @@ export const defaultData = {
   keywords: '',
   page: 1,
   historyList: [],
+  headerList: [],
 }
 
 const state = cloneDeep(defaultData)
@@ -28,4 +30,24 @@ export function resetData() {
 
 export function setHistoryList(list) {
   store.historyList = list
+}
+
+export async function initHeaderList() {
+  try {
+    let list = await localforage.getItem(headersKey)
+    let headers = list || []
+    setHeaderList(headers)
+    return headers
+  } catch (e) {
+    console.log(e)
+    return []
+  }
+}
+
+export function setHeaderList(list) {
+  store.headerList = list
+}
+
+export function getHeaderList() {
+  return store.headerList
 }

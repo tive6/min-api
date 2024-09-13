@@ -19,6 +19,7 @@ import {
 } from './common/helper'
 import { getRandomKey } from './common/helper'
 import DataTab from './components/dataTab'
+import GlobalSettings from './components/globalSettings'
 import HandleBar from './components/handleBar'
 import HistorySearch from './components/historySearch'
 import HistoryTab from './components/historyTab'
@@ -33,6 +34,7 @@ const Content = () => {
   const headersRef = useRef()
   const paramsJsonRef = useRef()
   const historySearchRef = useRef()
+  const globalSettingsRef = useRef()
 
   const currentFile = useRef(null)
   const [headForm] = Form.useForm()
@@ -151,6 +153,7 @@ const Content = () => {
     try {
       let list = await getLocalHistoryList()
       list.push(opts)
+      console.log(list)
       await localforage.setItem(historyKey, list)
       historySearchRef?.current?.search()
       setHistoryList(list)
@@ -504,6 +507,10 @@ const Content = () => {
     headersRef?.current?.initHandle(objToArr(headers))
   }
 
+  function showSettings() {
+    globalSettingsRef?.current?.show()
+  }
+
   return (
     <div className="app-content">
       <HandleBar />
@@ -540,6 +547,7 @@ const Content = () => {
             title=""
           >
             <Button
+              onClick={showSettings}
               className="form-item-btn"
               type="link"
               // disabled
@@ -566,6 +574,8 @@ const Content = () => {
         size="large"
         style={{ flex: 1, overflowY: 'hidden' }}
       />
+
+      <GlobalSettings ref={globalSettingsRef} />
     </div>
   )
 }
