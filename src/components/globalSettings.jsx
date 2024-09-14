@@ -4,8 +4,8 @@ import { Button, Card, Divider, Drawer, Form, Input, Select, Space, Switch, Tabs
 import localforage from 'localforage'
 import { forwardRef, useImperativeHandle, useRef } from 'react'
 
-import { HeaderOpts, headersKey } from '../common/config.js'
-import { setHeaderList } from '../store/index.js'
+import { cookiesKey, HeaderOpts, headersKey } from '../common/config.js'
+import { setCookieList, setHeaderList } from '../store/index.js'
 
 const defaultHeaderItem = [
   {
@@ -25,6 +25,8 @@ const Com = (props, ref) => {
 
   const d = useReactive({
     open: false,
+    currentKey: 'header',
+    itemKey: headersKey,
     headerKey: '',
     headerItems: [...HeaderOpts],
     headerList: [],
@@ -36,6 +38,7 @@ const Com = (props, ref) => {
   }
 
   function onClose() {
+    save()
     d.open = false
   }
 
@@ -169,14 +172,14 @@ const Com = (props, ref) => {
     {
       label: `Cookie`,
       key: 'cookie',
-      disabled: true,
+      disabled: false,
       children: formContent,
     },
   ]
 
   async function init() {
     try {
-      let list = await localforage.getItem(headersKey)
+      let list = await localforage.getItem(d.itemKey)
       d.headerList = list || []
       console.log(list)
       form.setFieldsValue({
@@ -192,11 +195,27 @@ const Com = (props, ref) => {
       let values = await form.validateFields()
       console.log(values)
       let headers = values?.headers || []
-      await localforage.setItem(headersKey, headers)
-      setHeaderList(headers)
+      await localforage.setItem(d.itemKey, headers)
+      if (d.currentKey === 'header') {
+        setHeaderList(headers)
+      } else {
+        setCookieList(headers)
+      }
     } catch (e) {
       console.log(e)
     }
+  }
+
+  async function onTabChange(key) {
+    await save()
+    d.currentKey = key
+    if (key === 'header') {
+      d.itemKey = headersKey
+    } else {
+      d.itemKey = cookiesKey
+    }
+    d.headerItems = [...HeaderOpts]
+    await init()
   }
 
   return (
@@ -204,9 +223,9 @@ const Com = (props, ref) => {
       title={
         <div className="flex-flex justify-between items-center">
           全局设置
-          <Button onClick={save} type="primary">
-            保存
-          </Button>
+          {/*<Button onClick={save} type="primary">*/}
+          {/*  保存*/}
+          {/*</Button>*/}
         </div>
       }
       width="70%"
@@ -219,6 +238,7 @@ const Com = (props, ref) => {
         tabPosition={'left'}
         // style={{ height: 220 }}
         items={tabsItems}
+        onChange={onTabChange}
       />
     </Drawer>
   )

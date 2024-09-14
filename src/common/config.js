@@ -23,6 +23,7 @@ export const columnsArr = [
 
 export const historyKey = 'request-history-list'
 export const headersKey = 'request-headers'
+export const cookiesKey = 'request-cookies'
 
 export const MethodOptions = [
   {

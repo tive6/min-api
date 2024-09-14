@@ -3,7 +3,7 @@ import { cloneDeep } from 'lodash-es'
 import { proxy } from 'valtio'
 import { useProxy } from 'valtio/utils'
 
-import { DefaultRequestType, headersKey } from '../common/config.js'
+import { cookiesKey, DefaultRequestType, headersKey } from '../common/config.js'
 
 export const defaultData = {
   requestType: DefaultRequestType,
@@ -13,6 +13,7 @@ export const defaultData = {
   page: 1,
   historyList: [],
   headerList: [],
+  cookieList: [],
 }
 
 const state = cloneDeep(defaultData)
@@ -32,11 +33,16 @@ export function setHistoryList(list) {
   store.historyList = list
 }
 
-export async function initHeaderList() {
+export async function initHeaderList(type = 'header') {
+  let key = type === 'header' ? headersKey : cookiesKey
   try {
-    let list = await localforage.getItem(headersKey)
+    let list = await localforage.getItem(key)
     let headers = list || []
-    setHeaderList(headers)
+    if (type === 'header') {
+      setHeaderList(headers)
+    } else {
+      setCookieList(headers)
+    }
     return headers
   } catch (e) {
     console.log(e)
@@ -50,4 +56,12 @@ export function setHeaderList(list) {
 
 export function getHeaderList() {
   return store.headerList
+}
+
+export function setCookieList(list) {
+  store.cookieList = list
+}
+
+export function getCookieList() {
+  return store.cookieList
 }

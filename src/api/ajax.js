@@ -1,6 +1,6 @@
 import { Body, fetch as client, ResponseType } from '@tauri-apps/api/http'
 
-import { getHeaders, mergeHeaders } from '../common/helper.js'
+import { getCookies, getHeaders, mergeHeaders } from '../common/helper.js'
 
 export const defaultHeaders = {
   'user-agent': 'Min-Api/Tauri-fetch-4.0.0', // 添加自定义的 User-Agent 头部
@@ -18,7 +18,9 @@ export const http = (opts = {}) => {
       },
       requestType
     )
+    let cookie = getCookies()
     console.log('http options header', header)
+    console.log('http options cookie', cookie)
     console.log('http options data', data)
     let body = null
     if (contentType === 'form') {
@@ -36,7 +38,10 @@ export const http = (opts = {}) => {
     console.log('http body', body)
     client(url, {
       method: method || 'GET',
-      headers: header,
+      headers: {
+        ...header,
+        cookie,
+      },
       responseType: responseType,
       timeout: 5 * 60 * 1000,
       query: params,
@@ -58,8 +63,10 @@ export const stream = (opts = {}) => {
   return new Promise((resolve, reject) => {
     const { url, method, params, data, requestType, headers, callback } = opts
     let { contentType, header } = mergeHeaders(headers)
+    let cookie = getCookies()
     console.log('stream options contentType', contentType)
     console.log('stream options header', header)
+    console.log('stream options cookie', cookie)
     console.log('stream options data', data)
     let body = null
     if (!['GET', 'HEAD'].includes(method)) {
@@ -75,6 +82,7 @@ export const stream = (opts = {}) => {
         ...getHeaders(),
         ...defaultHeaders,
         ...headers,
+        cookie,
       },
       mode: 'cors',
       cache: 'default',

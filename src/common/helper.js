@@ -5,7 +5,7 @@ import localforage from 'localforage'
 import { parse } from 'path-browserify'
 
 import { defaultHeaders } from '../api/ajax.js'
-import { getHeaderList, setHistoryList } from '../store/index.js'
+import { getCookieList, getHeaderList, setHistoryList } from '../store/index.js'
 import { ContentTypeMap, historyKey } from './config.js'
 
 export const formatFixedDate = (date, fmt) => {
@@ -408,4 +408,14 @@ export function getHeaders() {
     }
   })
   return obj
+}
+
+export function getCookies() {
+  let list = getCookieList()
+  return list.reduce((acc, { k, v, enable }) => {
+    if (enable) {
+      acc += `${k}=${v}; `
+    }
+    return acc
+  }, '')
 }

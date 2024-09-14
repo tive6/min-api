@@ -170,7 +170,8 @@ function App() {
     }
 
     main()
-    initHeaderList()
+    initHeaderList('header')
+    initHeaderList('cookie')
 
     return () => {
       unlisten && unlisten()

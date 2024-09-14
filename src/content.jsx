@@ -550,7 +550,6 @@ const Content = () => {
               onClick={showSettings}
               className="form-item-btn"
               type="link"
-              // disabled
               icon={
                 <ControlOutlined
                   style={{
