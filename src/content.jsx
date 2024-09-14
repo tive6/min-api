@@ -2,6 +2,7 @@ import { ControlOutlined, SendOutlined } from '@ant-design/icons'
 import { useDebounceEffect, useReactive } from 'ahooks'
 import { Badge, Button, Form, Input, notification, Popover, Select, Tabs } from 'antd'
 import localforage from 'localforage'
+import { cloneDeep } from 'lodash-es'
 import { useEffect, useRef, useState } from 'react'
 
 import { http, stream } from './api/ajax'
@@ -153,7 +154,6 @@ const Content = () => {
     try {
       let list = await getLocalHistoryList()
       list.push(opts)
-      console.log(list)
       await localforage.setItem(historyKey, list)
       historySearchRef?.current?.search()
       setHistoryList(list)
@@ -238,7 +238,7 @@ const Content = () => {
         Reflect.deleteProperty(opts.data, that.fileKey)
       }
       setHistoryData({
-        ...opts,
+        ...cloneDeep(opts),
         status: state,
       })
       setQueryParams({})
