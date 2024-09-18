@@ -5,8 +5,8 @@ import localforage from 'localforage'
 import { parse } from 'path-browserify'
 
 import { defaultHeaders } from '../api/ajax.js'
-import { getCookieList, getHeaderList, setHistoryList } from '../store/index.js'
-import { ContentTypeMap, historyKey } from './config.js'
+import { getCurrentEnv, getSettingsList, setHistoryList } from '../store/index.js'
+import { ContentTypeMap, historyKey, httpRegex } from './config.js'
 
 export const formatFixedDate = (date, fmt) => {
   if (typeof date === 'number') {
@@ -400,9 +400,9 @@ export function HeadersFirstRowHandle(arr = []) {
 }
 
 export function getHeaders() {
-  let headers = getHeaderList()
+  let list = getSettingsList('header')
   let obj = {}
-  headers.forEach(({ k, v, enable }) => {
+  list.forEach(({ k, v, enable }) => {
     if (enable) {
       obj[k] = v
     }
@@ -411,11 +411,22 @@ export function getHeaders() {
 }
 
 export function getCookies() {
-  let list = getCookieList()
+  let list = getSettingsList('cookie')
   return list.reduce((acc, { k, v, enable }) => {
     if (enable) {
       acc += `${k}=${v}; `
     }
     return acc
   }, '')
+}
+
+export function getUrl(url) {
+  let uri = ''
+  if (httpRegex.test(url)) {
+    uri = url
+  } else {
+    let baseUrl = getCurrentEnv()?.trim()
+    uri = `${baseUrl}${url}`
+  }
+  return uri
 }

@@ -11,7 +11,7 @@ import { attachConsole, info } from 'tauri-plugin-log-api'
 
 import { SkipVersion } from './common/consts.js'
 import Content from './content'
-import { initHeaderList } from './store/index.js'
+import { initGlobalSettings } from './store/index.js'
 
 localforage.config({
   // 选择存储引擎: INDEXEDDB、LOCALSTORAGE、WEBSQL
@@ -170,8 +170,7 @@ function App() {
     }
 
     main()
-    initHeaderList('header')
-    initHeaderList('cookie')
+    initGlobalSettings()
 
     return () => {
       unlisten && unlisten()

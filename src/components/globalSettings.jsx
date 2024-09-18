@@ -1,11 +1,25 @@
-import { CloseOutlined, PlusOutlined } from '@ant-design/icons'
+import { CloseOutlined, GlobalOutlined, PlusOutlined, RetweetOutlined } from '@ant-design/icons'
 import { useReactive } from 'ahooks'
-import { Button, Card, Divider, Drawer, Form, Input, Select, Space, Switch, Tabs } from 'antd'
+import {
+  Button,
+  Card,
+  Divider,
+  Drawer,
+  Form,
+  Input,
+  Popconfirm,
+  Select,
+  Space,
+  Switch,
+  Tabs,
+  Tag,
+  Tooltip,
+} from 'antd'
 import localforage from 'localforage'
-import { forwardRef, useImperativeHandle, useRef } from 'react'
+import { forwardRef, useImperativeHandle, useMemo, useRef } from 'react'
 
-import { cookiesKey, HeaderOpts, headersKey } from '../common/config.js'
-import { setCookieList, setHeaderList } from '../store/index.js'
+import { environmentKey, HeaderOpts, httpRegex, settingsMap } from '../common/config.js'
+import { setCurrentEnv, setSettingsList, useStore } from '../store/index.js'
 
 const defaultHeaderItem = [
   {
@@ -22,11 +36,12 @@ const Com = (props, ref) => {
 
   const inputRef = useRef(null)
   const [form] = Form.useForm()
+  const store = useStore()
 
   const d = useReactive({
     open: false,
-    currentKey: 'header',
-    itemKey: headersKey,
+    currentKey: 'environment',
+    itemKey: environmentKey,
     headerKey: '',
     headerItems: [...HeaderOpts],
     headerList: [],
@@ -81,10 +96,10 @@ const Com = (props, ref) => {
       autoComplete="off"
       // layout="inline"
       initialValues={{
-        headers: [...defaultHeaderItem],
+        rows: [...defaultHeaderItem],
       }}
     >
-      <Form.List name="headers">
+      <Form.List name="rows">
         {(fields, { add, remove }) => (
           <div style={{ display: 'flex', rowGap: 16, flexDirection: 'column' }}>
             {fields.map((field) => (
@@ -94,62 +109,98 @@ const Com = (props, ref) => {
                 title={`第 ${field.name + 1} 项`}
                 key={field.key}
                 extra={
-                  <CloseOutlined
-                    onClick={() => {
-                      remove(field.name)
-                    }}
-                  />
+                  <Popconfirm
+                    title="删除提醒"
+                    description={<div style={{ width: 200 }}>确认删除该项吗？</div>}
+                    onConfirm={remove.bind(null, field.name)}
+                    placement="left"
+                  >
+                    <Button size="small" type="link" danger icon={<CloseOutlined />}></Button>
+                  </Popconfirm>
                 }
               >
-                <Form.Item label="Key" style={{ marginBottom: 10 }} name={[field.name, 'k']}>
-                  <Select
-                    style={{
-                      width: '100%',
-                    }}
-                    allowClear
-                    placeholder="key"
-                    options={d.headerItems}
-                    dropdownRender={(menu) => (
-                      <>
-                        {menu}
-                        <Divider
-                          style={{
-                            margin: '8px 0',
-                          }}
-                        />
-                        <Space.Compact block>
-                          <Input
-                            placeholder="请输入"
-                            ref={inputRef}
-                            value={d.headerKey}
-                            // style={{ width: '300px' }}
-                            onChange={onHeaderKeyChange}
-                            onKeyDown={(e) => e.stopPropagation()}
+                <Form.Item
+                  label={d.currentKey === 'environment' ? '名称' : 'Key'}
+                  style={{ marginBottom: 10 }}
+                  name={[field.name, 'k']}
+                >
+                  {d.currentKey === 'header' ? (
+                    <Select
+                      style={{
+                        width: '100%',
+                      }}
+                      allowClear
+                      placeholder="请选择"
+                      options={d.headerItems}
+                      dropdownRender={(menu) => (
+                        <>
+                          {menu}
+                          <Divider
+                            style={{
+                              margin: '8px 0',
+                            }}
                           />
-                          <Button type="text" icon={<PlusOutlined />} onClick={addHeaderItem}>
-                            添加
-                          </Button>
-                        </Space.Compact>
-                      </>
-                    )}
-                  />
-                  {/*<Input allowClear placeholder="key" />*/}
+                          <Space.Compact block>
+                            <Input
+                              placeholder="请输入"
+                              ref={inputRef}
+                              value={d.headerKey}
+                              // style={{ width: '300px' }}
+                              onChange={onHeaderKeyChange}
+                              onKeyDown={(e) => e.stopPropagation()}
+                            />
+                            <Button type="text" icon={<PlusOutlined />} onClick={addHeaderItem}>
+                              添加
+                            </Button>
+                          </Space.Compact>
+                        </>
+                      )}
+                    />
+                  ) : (
+                    <Input allowClear placeholder="请输入" />
+                  )}
                 </Form.Item>
-                <Form.Item label="Value" style={{ marginBottom: 10 }} name={[field.name, 'v']}>
+                <Form.Item
+                  label={d.currentKey === 'environment' ? '域名' : 'Value'}
+                  style={{ marginBottom: 10 }}
+                  name={[field.name, 'v']}
+                  rules={
+                    d.currentKey === 'environment'
+                      ? [
+                          {
+                            required: true,
+                          },
+                          ({ getFieldValue }) => ({
+                            validator(_, value) {
+                              console.log(value)
+                              if (httpRegex.test(value)) {
+                                return Promise.resolve()
+                              }
+                              return Promise.reject(
+                                new Error('url 格式不正确，必须以 http(s):// 开头')
+                              )
+                            },
+                          }),
+                        ]
+                      : []
+                  }
+                >
                   <Input.TextArea
                     allowClear
                     autoSize={{ minRows: 1, maxRows: 5 }}
-                    placeholder="value"
+                    placeholder="请输入"
                   />
                 </Form.Item>
-                <Form.Item
-                  label="enable"
-                  valuePropName="checked"
-                  style={{ marginBottom: 10 }}
-                  name={[field.name, 'enable']}
-                >
-                  <Switch />
-                </Form.Item>
+                {d.currentKey !== 'environment' && (
+                  <Form.Item
+                    label="enable"
+                    valuePropName="checked"
+                    style={{ marginBottom: 10 }}
+                    name={[field.name, 'enable']}
+                  >
+                    <Switch />
+                  </Form.Item>
+                )}
               </Card>
             ))}
 
@@ -162,17 +213,69 @@ const Com = (props, ref) => {
     </Form>
   )
 
+  const envOpts = useMemo(() => {
+    return (
+      store.environmentList?.reduce((acc, item) => {
+        let k = item?.k?.trim()
+        let v = item?.v?.trim()
+        if (k && v) {
+          acc.push({
+            label: `${k} (${v})`,
+            value: v,
+          })
+        }
+        return acc
+      }, []) || []
+    )
+  }, [store.environmentList])
+
   const tabsItems = [
+    {
+      label: `环境`,
+      key: 'environment',
+      disabled: false,
+      children: (
+        <div>
+          <div className="flex items-center mb-16px">
+            <Tag size="large" icon={<GlobalOutlined />} color="success">
+              当前环境：
+            </Tag>
+            <Select
+              value={store.currentEnv}
+              allowClear
+              placeholder="请选择环境"
+              style={{ flex: 1 }}
+              onChange={(val) => {
+                setCurrentEnv(val)
+              }}
+              options={envOpts}
+            />
+            <Tooltip placement="topRight" title="同步环境配置">
+              <Button onClick={save} type="link" icon={<RetweetOutlined />}></Button>
+            </Tooltip>
+          </div>
+          {formContent}
+        </div>
+      ),
+    },
     {
       label: `Header`,
       key: 'header',
-      disabled: false,
       children: formContent,
     },
     {
       label: `Cookie`,
       key: 'cookie',
-      disabled: false,
+      children: formContent,
+    },
+    {
+      label: `Query`,
+      key: 'query',
+      children: formContent,
+    },
+    {
+      label: `Body`,
+      key: 'body',
       children: formContent,
     },
   ]
@@ -183,7 +286,7 @@ const Com = (props, ref) => {
       d.headerList = list || []
       console.log(list)
       form.setFieldsValue({
-        headers: list || [...defaultHeaderItem],
+        rows: list || [...defaultHeaderItem],
       })
     } catch (e) {
       console.log(e)
@@ -194,13 +297,9 @@ const Com = (props, ref) => {
     try {
       let values = await form.validateFields()
       console.log(values)
-      let headers = values?.headers || []
-      await localforage.setItem(d.itemKey, headers)
-      if (d.currentKey === 'header') {
-        setHeaderList(headers)
-      } else {
-        setCookieList(headers)
-      }
+      let rows = values?.rows || []
+      await localforage.setItem(d.itemKey, rows)
+      await setSettingsList(d.currentKey, rows)
     } catch (e) {
       console.log(e)
     }
@@ -209,12 +308,8 @@ const Com = (props, ref) => {
   async function onTabChange(key) {
     await save()
     d.currentKey = key
-    if (key === 'header') {
-      d.itemKey = headersKey
-    } else {
-      d.itemKey = cookiesKey
-    }
-    d.headerItems = [...HeaderOpts]
+    let { localKey } = settingsMap[key]
+    d.itemKey = localKey
     await init()
   }
 

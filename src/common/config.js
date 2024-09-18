@@ -21,9 +21,15 @@ export const columnsArr = [
   },
 ]
 
+export const currentEnvKey = 'current-environment'
+
 export const historyKey = 'request-history-list'
+
+export const environmentKey = 'settings-environment'
 export const headersKey = 'request-headers'
 export const cookiesKey = 'request-cookies'
+export const queryKey = 'request-query'
+export const bodyKey = 'request-body'
 
 export const MethodOptions = [
   {
@@ -205,3 +211,28 @@ export const HeaderOpts = [
   'Transfer-Encoding',
   'x-api-key',
 ].map((k) => ({ label: k, value: k, desc: '**' }))
+
+export const settingsMap = {
+  environment: {
+    localKey: environmentKey,
+    storeListKey: 'environmentList',
+  },
+  header: {
+    localKey: headersKey,
+    storeListKey: 'headerList',
+  },
+  cookie: {
+    localKey: cookiesKey,
+    storeListKey: 'cookieList',
+  },
+  query: {
+    localKey: queryKey,
+    storeListKey: 'queryList',
+  },
+  body: {
+    localKey: bodyKey,
+    storeListKey: 'bodyList',
+  },
+}
+
+export const httpRegex = /^https?:\/\/[a-zA-Z0-9]+/i

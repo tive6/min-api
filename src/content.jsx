@@ -6,7 +6,14 @@ import { cloneDeep } from 'lodash-es'
 import { useEffect, useRef, useState } from 'react'
 
 import { http, stream } from './api/ajax'
-import { DefaultRequestType, historyKey, layout, MethodOptions, testUrl } from './common/config'
+import {
+  DefaultRequestType,
+  historyKey,
+  httpRegex,
+  layout,
+  MethodOptions,
+  testUrl,
+} from './common/config'
 import {
   arrToObj,
   downloadFile,
@@ -286,7 +293,7 @@ const Content = () => {
     // loading 是否正在请求
     if (loading) return
     let { url, method } = headForm.getFieldsValue()
-    if (!/^(www.)|(http[s]?[:\\//])/g.test(url)) {
+    if (!httpRegex.test(url)) {
       notification.warning({
         message: '提醒',
         description: '请输入合法 url ！',

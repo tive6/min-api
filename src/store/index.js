@@ -3,7 +3,7 @@ import { cloneDeep } from 'lodash-es'
 import { proxy } from 'valtio'
 import { useProxy } from 'valtio/utils'
 
-import { cookiesKey, DefaultRequestType, headersKey } from '../common/config.js'
+import { currentEnvKey, DefaultRequestType, settingsMap } from '../common/config.js'
 
 export const defaultData = {
   requestType: DefaultRequestType,
@@ -12,8 +12,12 @@ export const defaultData = {
   keywords: '',
   page: 1,
   historyList: [],
+  environmentList: [],
   headerList: [],
   cookieList: [],
+  queryList: [],
+  bodyList: [],
+  currentEnv: null,
 }
 
 const state = cloneDeep(defaultData)
@@ -33,35 +37,52 @@ export function setHistoryList(list) {
   store.historyList = list
 }
 
-export async function initHeaderList(type = 'header') {
-  let key = type === 'header' ? headersKey : cookiesKey
+export async function setSettingsList(type, list) {
   try {
-    let list = await localforage.getItem(key)
-    let headers = list || []
-    if (type === 'header') {
-      setHeaderList(headers)
-    } else {
-      setCookieList(headers)
+    let { localKey, storeListKey } = settingsMap[type]
+    if (!list) {
+      list = await localforage.getItem(localKey)
     }
-    return headers
+    let rows = list || []
+    store[storeListKey] = rows
+    return rows
   } catch (e) {
     console.log(e)
     return []
   }
 }
 
-export function setHeaderList(list) {
-  store.headerList = list
+export function getSettingsList(type) {
+  try {
+    let { storeListKey } = settingsMap[type]
+    return store[storeListKey] || []
+  } catch (e) {
+    console.log(e)
+    return []
+  }
 }
 
-export function getHeaderList() {
-  return store.headerList
+export async function setCurrentEnv(env) {
+  try {
+    store.currentEnv = env
+    await localforage.setItem(currentEnvKey, env)
+  } catch (e) {
+    console.log(e)
+  }
 }
 
-export function setCookieList(list) {
-  store.cookieList = list
+export function getCurrentEnv() {
+  return store.currentEnv || null
 }
 
-export function getCookieList() {
-  return store.cookieList
+export async function initGlobalSettings() {
+  try {
+    Object.keys(settingsMap).forEach((type) => {
+      setSettingsList(type)
+    })
+    let env = await localforage.getItem(currentEnvKey)
+    store.currentEnv = env || null
+  } catch (e) {
+    console.log(e)
+  }
 }
