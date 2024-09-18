@@ -8,7 +8,7 @@ import { setHistoryList, useStore } from '../store/index.js'
 import { historyKey } from './../common/config'
 import useBaseConfig from './../hooks/baseConfig'
 
-const ContentTab = ({ onQueryChange }) => {
+const Com = ({ onQueryChange }) => {
   const store = useStore()
 
   const { historyBaseColumns } = useBaseConfig()
@@ -82,9 +82,9 @@ const ContentTab = ({ onQueryChange }) => {
   )
 }
 
-ContentTab.propTypes = {
+Com.propTypes = {
   // historyList: propTypes.array,
   onQueryChange: propTypes.func,
 }
 
-export default ContentTab
+export default Com

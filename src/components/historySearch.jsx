@@ -45,6 +45,10 @@ const Com = forwardRef((props, ref) => {
         defaultValue={store.keywords}
         ref={inputRef}
         onChange={(e) => (store.keywords = e.target.value)}
+        onClear={() => {
+          store.keywords = ''
+          search()
+        }}
         allowClear
         suffix={
           <div>

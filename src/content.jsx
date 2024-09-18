@@ -155,8 +155,11 @@ const Content = () => {
       let list = await getLocalHistoryList()
       list.push(opts)
       await localforage.setItem(historyKey, list)
-      historySearchRef?.current?.search()
-      setHistoryList(list)
+      if (historySearchRef?.current) {
+        historySearchRef?.current?.search()
+      } else {
+        setHistoryList(list)
+      }
     } catch (e) {
       console.log(e)
     }
@@ -511,6 +514,16 @@ const Content = () => {
     globalSettingsRef?.current?.show()
   }
 
+  function onTabChange(key) {
+    setTabKey(key)
+    if (key === '6') {
+      let t = setTimeout(() => {
+        historySearchRef?.current?.search()
+        clearTimeout(t)
+      }, 0)
+    }
+  }
+
   return (
     <div className="app-content">
       <HandleBar />
@@ -566,7 +579,7 @@ const Content = () => {
         tabBarExtraContent={{
           right: tabKey === '6' ? <HistorySearch ref={historySearchRef} /> : null,
         }}
-        onTabClick={setTabKey}
+        onTabClick={onTabChange}
         defaultActiveKey={tabKey}
         activeKey={tabKey}
         items={tabsItems}
