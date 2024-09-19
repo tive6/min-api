@@ -7,6 +7,8 @@ export const defaultHeaders = {
   // 'content-type': 'application/json',
 }
 
+export const timeout = 5 * 60 * 1000
+
 // https://tauri.app/zh-cn/v1/api/js/http#fetch
 export const http = (opts = {}) => {
   return new Promise((resolve, reject) => {
@@ -47,13 +49,13 @@ export const http = (opts = {}) => {
         ...header,
         cookie,
       },
-      responseType: responseType,
-      timeout: 5 * 60 * 1000,
       query: {
         ...getGlobalConfig('query'),
         ...params,
       },
       body: data && body,
+      responseType: responseType,
+      timeout,
     })
       .then((res) => {
         callback && callback(res)
@@ -100,12 +102,12 @@ export const stream = (opts = {}) => {
         ...headers,
         cookie,
       },
+      body: body,
+      timeout,
       mode: 'cors',
       cache: 'default',
       credentials: 'same-origin', // include, *same-origin, omit
       redirect: 'follow', // manual, *follow, error
-      timeout: 5 * 60 * 1000,
-      body: body,
     })
       .then((res) => {
         callback && callback(res)

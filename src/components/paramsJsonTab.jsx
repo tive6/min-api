@@ -1,6 +1,6 @@
-import { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react'
 import JsonEditor from 'jsoneditor'
 import propTypes from 'prop-types'
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
 
 const ParamsJsonTab = forwardRef(({ resJson, onDataChange }, ref) => {
   useImperativeHandle(ref, () => ({
@@ -44,7 +44,7 @@ const ParamsJsonTab = forwardRef(({ resJson, onDataChange }, ref) => {
 
   return (
     <>
-      <div style={{ width: '100%', height: 'calc(100vh - 216px)' }} ref={editorWrap}></div>
+      <div className="w-full h-[calc(100vh-216px)]" ref={editorWrap}></div>
     </>
   )
 })

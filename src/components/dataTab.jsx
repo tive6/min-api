@@ -27,7 +27,7 @@ const ResponseTab = ({ resJson, modes }) => {
 
   return (
     <>
-      <div style={{ width: '100%', height: 'calc(100vh - 160px)' }} ref={editorWrap}></div>
+      <div className="w-full h-[calc(100vh-160px)]" ref={editorWrap}></div>
     </>
   )
 }

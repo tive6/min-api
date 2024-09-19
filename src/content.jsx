@@ -551,7 +551,7 @@ const Content = () => {
             <Input
               allowClear
               addonBefore={prefixSelector}
-              style={{ width: '100%' }}
+              className="w-full"
               onBlur={inputOnBlur}
               onPressEnter={inputOnEnter}
               placeholder="请输入url，例：https://test.cn"

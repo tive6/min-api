@@ -37,7 +37,7 @@ const Com = ({ onQueryChange }) => {
       render: (text, record) => (
         <Space size="small">
           <a onClick={() => onQueryChange(record)}>请求</a>
-          <a onClick={() => deleteRow(record)} style={{ color: '#FF4D4F' }}>
+          <a onClick={() => deleteRow(record)} className="text-#FF4D4F">
             删除
           </a>
         </Space>

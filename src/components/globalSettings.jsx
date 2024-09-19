@@ -93,7 +93,6 @@ const Com = (props, ref) => {
         },
       }}
       form={form}
-      style={{ width: '100%' }}
       autoComplete="off"
       // layout="inline"
       initialValues={{
@@ -102,7 +101,7 @@ const Com = (props, ref) => {
     >
       <Form.List name="rows">
         {(fields, { add, remove }) => (
-          <div style={{ display: 'flex', rowGap: 16, flexDirection: 'column' }}>
+          <div className="flex flex-col flex-gap-16px">
             {fields.map((field) => (
               <Card
                 size="small"
@@ -112,7 +111,7 @@ const Com = (props, ref) => {
                 extra={
                   <Popconfirm
                     title="删除提醒"
-                    description={<div style={{ width: 200 }}>确认删除该项吗？</div>}
+                    description={<div className="w-200px">确认删除该项吗？</div>}
                     onConfirm={remove.bind(null, field.name)}
                     placement="left"
                   >
@@ -146,7 +145,6 @@ const Com = (props, ref) => {
                               placeholder="请输入"
                               ref={inputRef}
                               value={d.headerKey}
-                              // style={{ width: '300px' }}
                               onChange={onHeaderKeyChange}
                               onKeyDown={(e) => e.stopPropagation()}
                             />
@@ -346,7 +344,6 @@ const Com = (props, ref) => {
       <Tabs
         size="small"
         tabPosition={'left'}
-        // style={{ height: 220 }}
         className="h-100% overflow-y-auto"
         items={tabsItems}
         onChange={onTabChange}
