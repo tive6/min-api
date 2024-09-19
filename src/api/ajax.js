@@ -1,6 +1,6 @@
 import { Body, fetch as client, ResponseType } from '@tauri-apps/api/http'
 
-import { getCookies, getHeaders, mergeHeaders } from '../common/helper.js'
+import { getCookies, getHeaders, getUrl, mergeHeaders } from '../common/helper.js'
 
 export const defaultHeaders = {
   'user-agent': 'Min-Api/Tauri-fetch-4.0.0', // 添加自定义的 User-Agent 头部
@@ -36,7 +36,9 @@ export const http = (opts = {}) => {
     }
     console.log('responseType', responseType === 3 ? 'Binary' : 'TEXT')
     console.log('http body', body)
-    client(url, {
+    let path = getUrl(url)
+    console.log('http options url', path)
+    client(path, {
       method: method || 'GET',
       headers: {
         ...header,
@@ -75,7 +77,9 @@ export const stream = (opts = {}) => {
     let query = new URLSearchParams(params)
     let queryStr = query.toString()
     let uri = `${url}${queryStr ? `?${queryStr}` : ''}`
-    fetch(uri, {
+    let path = getUrl(uri)
+    console.log('http options url', path)
+    fetch(path, {
       method: method || 'GET',
       headers: {
         'content-type': 'application/json',

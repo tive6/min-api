@@ -157,3 +157,18 @@ a {
     width: auto;
   }
 }
+
+/* 全局设置模块 */
+.global-settings {
+  .ant-tabs-content-holder {
+    height: 100%;
+    overflow-y: auto;
+    padding: 20px 24px 20px 0;
+
+    @include scrollbar;
+  }
+
+  .ant-tabs-nav-list {
+    padding-top: 16px;
+  }
+}

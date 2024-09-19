@@ -1,6 +1,7 @@
 import { CloseOutlined, GlobalOutlined, PlusOutlined, RetweetOutlined } from '@ant-design/icons'
 import { useReactive } from 'ahooks'
 import {
+  Affix,
   Button,
   Card,
   Divider,
@@ -16,10 +17,10 @@ import {
   Tooltip,
 } from 'antd'
 import localforage from 'localforage'
-import { forwardRef, useImperativeHandle, useMemo, useRef } from 'react'
+import { forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react'
 
 import { environmentKey, HeaderOpts, httpRegex, settingsMap } from '../common/config.js'
-import { setCurrentEnv, setSettingsList, useStore } from '../store/index.js'
+import { getCurrentEnv, setCurrentEnv, setSettingsList, useStore } from '../store/index.js'
 
 const defaultHeaderItem = [
   {
@@ -172,7 +173,6 @@ const Com = (props, ref) => {
                           },
                           ({ getFieldValue }) => ({
                             validator(_, value) {
-                              console.log(value)
                               if (httpRegex.test(value)) {
                                 return Promise.resolve()
                               }
@@ -229,6 +229,8 @@ const Com = (props, ref) => {
     )
   }, [store.environmentList])
 
+  const [container, setContainer] = useState(null)
+
   const tabsItems = [
     {
       label: `环境`,
@@ -236,24 +238,26 @@ const Com = (props, ref) => {
       disabled: false,
       children: (
         <div>
-          <div className="flex items-center mb-16px">
-            <Tag size="large" icon={<GlobalOutlined />} color="success">
-              当前环境：
-            </Tag>
-            <Select
-              value={store.currentEnv}
-              allowClear
-              placeholder="请选择环境"
-              style={{ flex: 1 }}
-              onChange={(val) => {
-                setCurrentEnv(val)
-              }}
-              options={envOpts}
-            />
-            <Tooltip placement="topRight" title="同步环境配置">
-              <Button onClick={save} type="link" icon={<RetweetOutlined />}></Button>
-            </Tooltip>
-          </div>
+          <Affix offsetTop={78}>
+            <div className="flex items-center bg-#fff mt--21px pt-10px pb-1px">
+              <Tag size="large" icon={<GlobalOutlined />} color="success">
+                当前环境：
+              </Tag>
+              <Select
+                value={store.currentEnv}
+                allowClear
+                placeholder="请选择环境"
+                style={{ flex: 1 }}
+                onChange={(val) => {
+                  setCurrentEnv(val)
+                }}
+                options={envOpts}
+              />
+              <Tooltip placement="topRight" title="修改配置后，需要重新同步">
+                <Button onClick={save} type="link" icon={<RetweetOutlined />}></Button>
+              </Tooltip>
+            </div>
+          </Affix>
           {formContent}
         </div>
       ),
@@ -300,6 +304,14 @@ const Com = (props, ref) => {
       let rows = values?.rows || []
       await localforage.setItem(d.itemKey, rows)
       await setSettingsList(d.currentKey, rows)
+      if (d.currentKey === 'environment') {
+        // 检测当前环境是否存在于环境列表中
+        let currentEnv = getCurrentEnv()
+        let env = rows.find(({ v }) => v === currentEnv)
+        if (!env) {
+          setCurrentEnv(null)
+        }
+      }
     } catch (e) {
       console.log(e)
     }
@@ -324,14 +336,18 @@ const Com = (props, ref) => {
         </div>
       }
       width="70%"
+      className="global-settings"
+      classNames={{
+        body: '!p-0',
+      }}
       onClose={onClose}
       open={d.open}
     >
       <Tabs
-        defaultActiveKey="1"
         size="small"
         tabPosition={'left'}
         // style={{ height: 220 }}
+        className="h-100% overflow-y-auto"
         items={tabsItems}
         onChange={onTabChange}
       />

@@ -293,12 +293,15 @@ const Content = () => {
     // loading 是否正在请求
     if (loading) return
     let { url, method } = headForm.getFieldsValue()
-    if (!httpRegex.test(url)) {
-      notification.warning({
-        message: '提醒',
-        description: '请输入合法 url ！',
-      })
-      return false
+    if (!store.currentEnv) {
+      console.log('currentEnv', store.currentEnv)
+      if (!httpRegex.test(url)) {
+        notification.warning({
+          message: '提醒',
+          description: '请配置环境变量，或输入合法 url ！',
+        })
+        return false
+      }
     }
     console.log(method, url)
     setUrl(url)
