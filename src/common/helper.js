@@ -399,8 +399,8 @@ export function HeadersFirstRowHandle(arr = []) {
   return arr
 }
 
-export function getHeaders() {
-  let list = getSettingsList('header')
+export function getGlobalConfig(type) {
+  let list = getSettingsList(type)
   let obj = {}
   list.forEach(({ k, v, enable }) => {
     if (enable) {

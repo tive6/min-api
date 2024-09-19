@@ -1,6 +1,6 @@
 import { Body, fetch as client, ResponseType } from '@tauri-apps/api/http'
 
-import { getCookies, getHeaders, getUrl, mergeHeaders } from '../common/helper.js'
+import { getCookies, getGlobalConfig, getUrl, mergeHeaders } from '../common/helper.js'
 
 export const defaultHeaders = {
   'user-agent': 'Min-Api/Tauri-fetch-4.0.0', // 添加自定义的 User-Agent 头部
@@ -13,7 +13,7 @@ export const http = (opts = {}) => {
     const { url, method, params, data, requestType, headers, callback } = opts
     let { contentType, header } = mergeHeaders(
       {
-        ...getHeaders(),
+        ...getGlobalConfig('header'),
         ...headers,
       },
       requestType
@@ -27,7 +27,10 @@ export const http = (opts = {}) => {
       body = Body.form(data)
       console.log('contentType', 'form')
     } else {
-      body = Body.json(data)
+      body = Body.json({
+        ...getGlobalConfig('body'),
+        ...data,
+      })
       console.log('contentType', 'json')
     }
     let responseType = ResponseType.Text
@@ -46,7 +49,10 @@ export const http = (opts = {}) => {
       },
       responseType: responseType,
       timeout: 5 * 60 * 1000,
-      query: params,
+      query: {
+        ...getGlobalConfig('query'),
+        ...params,
+      },
       body: data && body,
     })
       .then((res) => {
@@ -72,9 +78,15 @@ export const stream = (opts = {}) => {
     console.log('stream options data', data)
     let body = null
     if (!['GET', 'HEAD'].includes(method)) {
-      body = JSON.stringify(data || {})
+      body = JSON.stringify({
+        ...getGlobalConfig('body'),
+        ...(data || {}),
+      })
     }
-    let query = new URLSearchParams(params)
+    let query = new URLSearchParams({
+      ...getGlobalConfig('query'),
+      ...params,
+    })
     let queryStr = query.toString()
     let uri = `${url}${queryStr ? `?${queryStr}` : ''}`
     let path = getUrl(uri)
@@ -83,7 +95,7 @@ export const stream = (opts = {}) => {
       method: method || 'GET',
       headers: {
         'content-type': 'application/json',
-        ...getHeaders(),
+        ...getGlobalConfig('header'),
         ...defaultHeaders,
         ...headers,
         cookie,
