@@ -6,7 +6,8 @@ import { parse } from 'path-browserify'
 
 import { defaultHeaders } from '../api/ajax.js'
 import { getCurrentEnv, getSettingsList, setHistoryList } from '../store/index.js'
-import { ContentTypeMap, historyKey, httpRegex } from './config.js'
+import { ContentTypeMap } from './config.js'
+import { historyKey, httpRegex } from './consts.js'
 
 export const formatFixedDate = (date, fmt) => {
   if (typeof date === 'number') {

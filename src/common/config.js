@@ -1,3 +1,5 @@
+import { bodyKey, cookiesKey, environmentKey, headersKey, queryKey } from './consts.js'
+
 export const columnsArr = [
   {
     title: 'Key',
@@ -20,16 +22,6 @@ export const columnsArr = [
     width: 70,
   },
 ]
-
-export const currentEnvKey = 'current-environment'
-
-export const historyKey = 'request-history-list'
-
-export const environmentKey = 'settings-environment'
-export const headersKey = 'request-headers'
-export const cookiesKey = 'request-cookies'
-export const queryKey = 'request-query'
-export const bodyKey = 'request-body'
 
 export const MethodOptions = [
   {
@@ -80,8 +72,6 @@ export const formItemStyle = {
     width: '100%',
   },
 }
-
-export const testUrl = 'https://dog.ceo/api/breeds/image/random'
 
 export const RequestTypeOptions = [
   {
@@ -228,5 +218,3 @@ export const settingsMap = {
     storeListKey: 'bodyList',
   },
 }
-
-export const httpRegex = /^https?:\/\/[a-zA-Z0-9]+/i

@@ -3,7 +3,8 @@ import { cloneDeep } from 'lodash-es'
 import { proxy } from 'valtio'
 import { useProxy } from 'valtio/utils'
 
-import { currentEnvKey, DefaultRequestType, settingsMap } from '../common/config.js'
+import { DefaultRequestType, settingsMap } from '../common/config.js'
+import { currentEnvKey } from '../common/consts.js'
 
 export const defaultData = {
   requestType: DefaultRequestType,

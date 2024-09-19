@@ -10,7 +10,7 @@ import { relaunch } from '@tauri-apps/api/process'
 import { FloatButton, notification } from 'antd'
 import localforage from 'localforage'
 
-import { historyKey } from '../common/config.js'
+import { historyKey } from '../common/consts.js'
 import { exportHistory, importHistory } from '../common/helper.js'
 
 const Com = () => {

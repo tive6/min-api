@@ -6,14 +6,8 @@ import { cloneDeep } from 'lodash-es'
 import { useEffect, useRef, useState } from 'react'
 
 import { http, stream } from './api/ajax'
-import {
-  DefaultRequestType,
-  historyKey,
-  httpRegex,
-  layout,
-  MethodOptions,
-  testUrl,
-} from './common/config'
+import { DefaultRequestType, layout, MethodOptions } from './common/config'
+import { historyKey, httpRegex, testUrl } from './common/consts.js'
 import {
   arrToObj,
   downloadFile,
@@ -554,7 +548,7 @@ const Content = () => {
               className="w-full"
               onBlur={inputOnBlur}
               onPressEnter={inputOnEnter}
-              placeholder="请输入url，例：https://test.cn"
+              placeholder={`请输入完整url，"${testUrl}"， 或接口路径，"/api/xxx"`}
             />
           </Form.Item>
           <Form.Item className="form-item-btn">

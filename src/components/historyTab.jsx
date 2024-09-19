@@ -3,9 +3,9 @@ import localforage from 'localforage'
 import propTypes from 'prop-types'
 import { useEffect } from 'react'
 
+import { historyKey } from '../common/consts.js'
 import { getLocalHistoryList } from '../common/helper.js'
 import { setHistoryList, useStore } from '../store/index.js'
-import { historyKey } from './../common/config'
 import useBaseConfig from './../hooks/baseConfig'
 
 const Com = ({ onQueryChange }) => {

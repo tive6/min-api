@@ -17,9 +17,10 @@ import {
   Tooltip,
 } from 'antd'
 import localforage from 'localforage'
-import { forwardRef, useImperativeHandle, useMemo, useRef, useState } from 'react'
+import { forwardRef, useImperativeHandle, useMemo, useRef } from 'react'
 
-import { environmentKey, HeaderOpts, httpRegex, settingsMap } from '../common/config.js'
+import { HeaderOpts, settingsMap } from '../common/config.js'
+import { environmentKey, httpRegex } from '../common/consts.js'
 import { getCurrentEnv, setCurrentEnv, setSettingsList, useStore } from '../store/index.js'
 
 const defaultHeaderItem = [
@@ -227,8 +228,6 @@ const Com = (props, ref) => {
     )
   }, [store.environmentList])
 
-  const [container, setContainer] = useState(null)
-
   const tabsItems = [
     {
       label: `环境`,
@@ -244,7 +243,7 @@ const Com = (props, ref) => {
               <Select
                 value={store.currentEnv}
                 allowClear
-                placeholder="请选择环境"
+                placeholder="请选择环境（BaseUrl）"
                 style={{ flex: 1 }}
                 onChange={(val) => {
                   setCurrentEnv(val)
