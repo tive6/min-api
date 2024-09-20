@@ -17,7 +17,9 @@ const repo = 'post-tools-tauri'
 
 async function getPkg() {
   try {
-    return await readJson(join(process.cwd(), 'package.json'))
+    return await readJson(
+      join(process.cwd(), 'package.json')
+    )
   } catch (e) {
     console.log(e)
     return null
@@ -29,7 +31,10 @@ async function getPkg() {
   console.log({ name, productName, version })
   // const filename = `${productName}_${version}_aarch64.dmg`
   // const filepath = join(process.cwd(), `src-tauri/target/release/bundle/dmg/${filename}`)
-  const filepath = join(process.cwd(), `src-tauri/target/${mode}/bundle/macos/${filename}`)
+  const filepath = join(
+    process.cwd(),
+    `src-tauri/target/${mode}/bundle/macos/${filename}`
+  )
   let release_id = await getLatestRelease()
   let attach_file_id = await getAllAttachFiles(release_id)
   if (attach_file_id) {
@@ -41,9 +46,13 @@ async function getPkg() {
   console.log({ release_id })
   let formData = new FormData()
   let file = await readFile(filepath)
-  let files = new File([new Uint8Array(file)], basename(filepath), {
-    type: 'application/zip', // 可以根据文件类型设置 MIME 类型
-  })
+  let files = new File(
+    [new Uint8Array(file)],
+    basename(filepath),
+    {
+      type: 'application/zip', // 可以根据文件类型设置 MIME 类型
+    }
+  )
   // let file = createReadStream(filepath)
   console.log({ GITEE_TOKEN })
   formData.append('access_token', GITEE_TOKEN)
@@ -97,7 +106,10 @@ async function getAllAttachFiles(release_id) {
   }
 }
 
-async function delAttachFiles({ release_id, attach_file_id }) {
+async function delAttachFiles({
+  release_id,
+  attach_file_id,
+}) {
   try {
     let { data } = await axios({
       url: `https://gitee.com/api/v5/repos/${owner}/${repo}/releases/${release_id}/attach_files/${attach_file_id}`,

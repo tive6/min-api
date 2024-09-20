@@ -2,7 +2,11 @@ import { LinkOutlined } from '@ant-design/icons'
 import { getName, getVersion } from '@tauri-apps/api/app'
 import { relaunch } from '@tauri-apps/api/process'
 import { open } from '@tauri-apps/api/shell'
-import { checkUpdate, installUpdate, onUpdaterEvent } from '@tauri-apps/api/updater'
+import {
+  checkUpdate,
+  installUpdate,
+  onUpdaterEvent,
+} from '@tauri-apps/api/updater'
 import { useReactive } from 'ahooks'
 import { Button, notification } from 'antd'
 import localforage from 'localforage'
@@ -24,7 +28,8 @@ localforage.config({
 })
 
 function App() {
-  const [api, contextHolder] = notification.useNotification()
+  const [api, contextHolder] =
+    notification.useNotification()
 
   const d = useReactive({
     status: '',
@@ -47,13 +52,19 @@ function App() {
       message: `${appName} 更新提醒`,
       description: (
         <div>
-          <div className="items-center">当前版本：{appVersion}</div>
-          <div className="items-center">发现新版本：{version}</div>
+          <div className="items-center">
+            当前版本：{appVersion}
+          </div>
+          <div className="items-center">
+            发现新版本：{version}
+          </div>
           <div className="items-center">
             发布时间：{date}
             {/*发布时间：{formatFixedDate(new Date(d), 'yyyy-MM-dd HH:mm:ss')}*/}
           </div>
-          <div className="items-center">更新内容：{body}</div>
+          <div className="items-center">
+            更新内容：{body}
+          </div>
           <div className="items-center">
             更新日志：
             <Button
@@ -67,11 +78,18 @@ function App() {
             </Button>
           </div>
           <div className="items-center justify-between mt-20">
-            <Button onClick={jumpVer.bind(null, version)} size="small">
+            <Button
+              onClick={jumpVer.bind(null, version)}
+              size="small"
+            >
               跳过这个版本
             </Button>
             <div className="flex">
-              <Button onClick={cancel} size="small" className="ml-10">
+              <Button
+                onClick={cancel}
+                size="small"
+                className="ml-10"
+              >
                 下次再说
               </Button>
               <Button
@@ -134,8 +152,12 @@ function App() {
     let detach = null
 
     async function main() {
-      // with LogTarget::Webview enabled this function will print logs to the browser console
-      detach = await attachConsole()
+      let isDebug = !!import.meta.env.TAURI_DEBUG
+      console.log('isDebug', isDebug)
+      if (!isDebug) {
+        // with LogTarget::Webview enabled this function will print logs to the browser console
+        detach = await attachConsole()
+      }
 
       // trace('Trace')
       // info('Info')
@@ -143,20 +165,31 @@ function App() {
       info('app start')
 
       try {
-        unlisten = await onUpdaterEvent(({ error, status }) => {
-          // This will log all updater events, including status updates and errors.
-          console.log('Updater event', { error }, { status })
-          d.loading = status === 'PENDING'
-          if (d.status !== 'DONE' && status === 'DONE') {
-            d.status = status
-            startInstall()
+        unlisten = await onUpdaterEvent(
+          ({ error, status }) => {
+            // This will log all updater events, including status updates and errors.
+            console.log(
+              'Updater event',
+              { error },
+              { status }
+            )
+            d.loading = status === 'PENDING'
+            if (d.status !== 'DONE' && status === 'DONE') {
+              d.status = status
+              startInstall()
+            }
           }
-        })
+        )
 
-        const { shouldUpdate, manifest } = await checkUpdate()
-        let skipVersion = await localforage.getItem(SkipVersion)
+        const { shouldUpdate, manifest } =
+          await checkUpdate()
+        let skipVersion =
+          await localforage.getItem(SkipVersion)
         console.log({ skipVersion })
-        if (shouldUpdate && manifest?.version !== skipVersion) {
+        if (
+          shouldUpdate &&
+          manifest?.version !== skipVersion
+        ) {
           // You could show a dialog asking the user if they want to install the update here.
           console.log(
             `Installing update ${manifest?.version}, ${manifest?.date}, ${manifest?.body}`

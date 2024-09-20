@@ -12,7 +12,9 @@ const repo = 'min-api'
 
 async function getPkg() {
   try {
-    return await readJson(join(process.cwd(), 'package.json'))
+    return await readJson(
+      join(process.cwd(), 'package.json')
+    )
   } catch (e) {
     console.log(e)
     return null
@@ -46,7 +48,9 @@ async function getLatestRelease() {
       },
     })
     console.log('latest', data)
-    let item = data?.assets?.find((item) => item.name === filename)
+    let item = data?.assets?.find(
+      (item) => item.name === filename
+    )
     let fileUrl = item?.browser_download_url
     return fileUrl
   } catch (e) {

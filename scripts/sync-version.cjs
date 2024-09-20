@@ -4,7 +4,10 @@ const { readFile, writeFile } = require('node:fs/promises')
 const { version, productName } = require('../package.json')
 
 const filepath = join(__dirname, '../src-tauri/Cargo.toml')
-const configPath = join(__dirname, '../src-tauri/tauri.conf.json')
+const configPath = join(
+  __dirname,
+  '../src-tauri/tauri.conf.json'
+)
 
 !(async function main() {
   try {

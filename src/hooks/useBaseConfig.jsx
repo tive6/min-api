@@ -1,5 +1,44 @@
+import {
+  ClearOutlined,
+  ExportOutlined,
+  ImportOutlined,
+  ReloadOutlined,
+  SyncOutlined,
+} from '@ant-design/icons'
 import { Tag } from 'antd'
 import propTypes from 'prop-types'
+import { useMemo } from 'react'
+
+const menuItems = [
+  {
+    label: '刷新',
+    key: 'refresh',
+    icon: <SyncOutlined />,
+  },
+  {
+    label: '重启',
+    key: 'reload',
+    icon: <ReloadOutlined />,
+  },
+  {
+    label: '导入配置和历史',
+    key: 'import',
+    icon: <ImportOutlined />,
+  },
+  {
+    label: '导出配置和历史',
+    key: 'export',
+    icon: <ExportOutlined />,
+    // disabled: true,
+  },
+  {
+    label: '清除历史记录',
+    key: 'cleanHistory',
+    icon: <ClearOutlined />,
+    danger: true,
+    // disabled: true,
+  },
+]
 
 function formatText(text) {
   if (!text) return ''
@@ -100,13 +139,17 @@ export default function useBaseConfig() {
       dataIndex: 'createTime',
       key: 'createTime',
       defaultSortOrder: 'descend',
-      sorter: (a, b) => new Date(a.createTime) - new Date(b.createTime),
+      sorter: (a, b) =>
+        new Date(a.createTime) - new Date(b.createTime),
       align: 'left',
       width: 120,
     },
   ]
 
+  const handleMenuItems = useMemo(() => menuItems, [])
+
   return {
     historyBaseColumns,
+    handleMenuItems,
   }
 }

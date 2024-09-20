@@ -3,8 +3,16 @@ const { NodeSSH } = require('node-ssh')
 const config = require('./config.json')
 const { platform } = process
 
-const { filename, host, username, rsaPathObj, localPathObj, remotePath, shellPath, shellName } =
-  config
+const {
+  filename,
+  host,
+  username,
+  rsaPathObj,
+  localPathObj,
+  remotePath,
+  shellPath,
+  shellName,
+} = config
 
 const rsaPath = rsaPathObj[platform]
 const localPath = localPathObj[platform]

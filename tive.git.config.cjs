@@ -1,5 +1,7 @@
 const { argv } = process
-const desc = (argv.length > 4 && argv.slice(-1)[0]) || `feat：new commit`
+const desc =
+  (argv.length > 4 && argv.slice(-1)[0]) ||
+  `feat：new commit`
 
 module.exports = {
   shell: [

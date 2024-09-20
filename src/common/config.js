@@ -1,4 +1,11 @@
-import { bodyKey, cookiesKey, environmentKey, headersKey, queryKey } from './consts.js'
+import {
+  bodyKey,
+  cookiesKey,
+  environmentKey,
+  headersKey,
+  historyKey,
+  queryKey,
+} from './consts.js'
 
 export const columnsArr = [
   {
@@ -92,16 +99,20 @@ export const RequestTypeOptions = [
   },
 ]
 
-export const DefaultRequestType = RequestTypeOptions[0].value
+export const DefaultRequestType =
+  RequestTypeOptions[0].value
 
 export const ContentTypeMap = {
   'application/pdf': 'pdf',
   'application/msword': 'doc',
-  'application/vnd.openxmlformats-officedocument.wordprocessingml.document': 'docx',
+  'application/vnd.openxmlformats-officedocument.wordprocessingml.document':
+    'docx',
   'application/vnd.ms-excel': 'xls',
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': 'xlsx',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':
+    'xlsx',
   'application/vnd.ms-powerpoint': 'ppt',
-  'application/vnd.openxmlformats-officedocument.presentationml.presentation': 'pptx',
+  'application/vnd.openxmlformats-officedocument.presentationml.presentation':
+    'pptx',
   'application/zip': 'zip',
   'application/x-rar-compressed': 'rar',
   'application/x-7z-compressed': '7z',
@@ -200,21 +211,48 @@ export const settingsMap = {
   environment: {
     localKey: environmentKey,
     storeListKey: 'environmentList',
+    name: 'Environment',
   },
   header: {
     localKey: headersKey,
     storeListKey: 'headerList',
+    name: 'Header',
   },
   cookie: {
     localKey: cookiesKey,
     storeListKey: 'cookieList',
+    name: 'Cookie',
   },
   query: {
     localKey: queryKey,
     storeListKey: 'queryList',
+    name: 'Query',
   },
   body: {
     localKey: bodyKey,
     storeListKey: 'bodyList',
+    name: 'Body',
   },
 }
+
+export const configMap = {
+  ...settingsMap,
+  history: {
+    localKey: historyKey,
+    storeListKey: 'historyList',
+    name: 'History',
+  },
+}
+
+export const configColumns = [
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    // align: 'center',
+  },
+  {
+    title: 'Length',
+    dataIndex: 'length',
+    // align: 'center',
+  },
+]

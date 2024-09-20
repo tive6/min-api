@@ -5,8 +5,8 @@ import { useEffect } from 'react'
 
 import { historyKey } from '../common/consts.js'
 import { getLocalHistoryList } from '../common/helper.js'
+import useBaseConfig from '../hooks/useBaseConfig.jsx'
 import { setHistoryList, useStore } from '../store/index.js'
-import useBaseConfig from './../hooks/baseConfig'
 
 const Com = ({ onQueryChange }) => {
   const store = useStore()
@@ -17,9 +17,13 @@ const Com = ({ onQueryChange }) => {
     try {
       console.log(row.key)
       const localHistoryList = await getLocalHistoryList()
-      let list = localHistoryList.filter((item) => item.key !== row.key)
+      let list = localHistoryList.filter(
+        (item) => item.key !== row.key
+      )
       await localforage.setItem(historyKey, list)
-      let historyList = store.historyList.filter((item) => item.key !== row.key)
+      let historyList = store.historyList.filter(
+        (item) => item.key !== row.key
+      )
       setHistoryList(historyList)
     } catch (e) {
       console.log(e)
@@ -37,7 +41,10 @@ const Com = ({ onQueryChange }) => {
       render: (text, record) => (
         <Space size="small">
           <a onClick={() => onQueryChange(record)}>请求</a>
-          <a onClick={() => deleteRow(record)} className="text-#FF4D4F">
+          <a
+            onClick={() => deleteRow(record)}
+            className="text-#FF4D4F"
+          >
             删除
           </a>
         </Space>
@@ -71,12 +78,13 @@ const Com = ({ onQueryChange }) => {
   return (
     <>
       <Table
+        // virtual={true}
         columns={columns}
         dataSource={store.historyList}
         pagination={pagination}
         className="history-table"
         cell-class-name="history-table-cell"
-        scroll={{ x: '100%', y: 'calc(100vh - 265px)' }}
+        scroll={{ x: '100%', y: 'calc(100vh - 246px)' }}
       />
     </>
   )

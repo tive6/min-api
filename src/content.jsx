@@ -1,13 +1,30 @@
-import { ControlOutlined, SendOutlined } from '@ant-design/icons'
+import { SendOutlined } from '@ant-design/icons'
 import { useDebounceEffect, useReactive } from 'ahooks'
-import { Badge, Button, Form, Input, notification, Popover, Select, Tabs } from 'antd'
+import {
+  Badge,
+  Button,
+  Form,
+  Input,
+  notification,
+  Select,
+  Space,
+  Tabs,
+} from 'antd'
 import localforage from 'localforage'
 import { cloneDeep } from 'lodash-es'
 import { useEffect, useRef, useState } from 'react'
 
 import { http, stream } from './api/ajax'
-import { DefaultRequestType, layout, MethodOptions } from './common/config'
-import { historyKey, httpRegex, testUrl } from './common/consts.js'
+import {
+  DefaultRequestType,
+  layout,
+  MethodOptions,
+} from './common/config'
+import {
+  historyKey,
+  httpRegex,
+  testUrl,
+} from './common/consts.js'
 import {
   arrToObj,
   downloadFile,
@@ -21,8 +38,7 @@ import {
 } from './common/helper'
 import { getRandomKey } from './common/helper'
 import DataTab from './components/dataTab'
-import GlobalSettings from './components/globalSettings'
-import HandleBar from './components/handleBar'
+import HeadMenu from './components/headMenu.jsx'
 import HistorySearch from './components/historySearch'
 import HistoryTab from './components/historyTab'
 import ParamsFormTab from './components/paramsFormTab'
@@ -36,7 +52,6 @@ const Content = () => {
   const headersRef = useRef()
   const paramsJsonRef = useRef()
   const historySearchRef = useRef()
-  const globalSettingsRef = useRef()
 
   const currentFile = useRef(null)
   const [headForm] = Form.useForm()
@@ -172,7 +187,10 @@ const Content = () => {
   }
 
   const httpHandle = async (p) => {
-    let date = formatFixedDate(new Date(), 'yyyy-MM-dd HH:mm:ss')
+    let date = formatFixedDate(
+      new Date(),
+      'yyyy-MM-dd HH:mm:ss'
+    )
     let opts = {
       ...p,
       createTime: date,
@@ -187,7 +205,14 @@ const Content = () => {
       }
       let res = await http(p)
       console.log('http res', res)
-      let { url, config, data, headers, status, statusText } = res
+      let {
+        url,
+        config,
+        data,
+        headers,
+        status,
+        statusText,
+      } = res
       console.log('requestType', store.requestType)
       console.log('http res data', res.data)
       if (store.requestType !== 'download') {
@@ -202,7 +227,9 @@ const Content = () => {
           try {
             data = numbersArrayToText(data)
           } catch (err) {
-            console.info('response data is not numbersArray')
+            console.info(
+              'response data is not numbersArray'
+            )
           }
         }
       }
@@ -210,7 +237,11 @@ const Content = () => {
       setTabKey('5')
       state = 1
       // console.log(headers)
-      if (status === 200 && data && store.requestType === 'download') {
+      if (
+        status === 200 &&
+        data &&
+        store.requestType === 'download'
+      ) {
         console.log('downloadFile start')
         let err = await downloadFile({ url, data, headers })
         console.log('downloadFile err', err)
@@ -253,7 +284,17 @@ const Content = () => {
   async function fetchOfStream(p) {
     try {
       let res = await stream(p)
-      let { body, bodyUsed, headers, ok, redirected, status, statusText, type, url } = res
+      let {
+        body,
+        bodyUsed,
+        headers,
+        ok,
+        redirected,
+        status,
+        statusText,
+        type,
+        url,
+      } = res
       const reader = body.getReader()
       that.resData = []
       setTabKey('5')
@@ -353,7 +394,9 @@ const Content = () => {
           return false
         }
         let { name, type } = currentFile.current
-        let uint8Array = await fileToUint8Array(currentFile.current)
+        let uint8Array = await fileToUint8Array(
+          currentFile.current
+        )
         // let arrayBuffer = await currentFile.current.arrayBuffer()
         let fileKey = p.data.file || 'file'
         that.fileKey = fileKey
@@ -402,7 +445,10 @@ const Content = () => {
       label: (
         <div>
           参数
-          <Badge count={count.params} style={{ backgroundColor: '#249C47' }} />
+          <Badge
+            count={count.params}
+            style={{ backgroundColor: '#249C47' }}
+          />
         </div>
       ),
       children: (
@@ -450,31 +496,59 @@ const Content = () => {
       label: (
         <div>
           请求头
-          <Badge count={count.headers} style={{ backgroundColor: '#249C47' }} />
+          <Badge
+            count={count.headers}
+            style={{ backgroundColor: '#249C47' }}
+          />
         </div>
       ),
       forceRender: true, // 被隐藏时是否渲染 DOM 结构
-      children: <ParamsFormTab name="HeadersTab" ref={headersRef} onDataChange={setHeaders} />,
+      children: (
+        <ParamsFormTab
+          name="HeadersTab"
+          ref={headersRef}
+          onDataChange={setHeaders}
+        />
+      ),
     },
     {
       key: '4',
       label: '响应',
-      children: <DataTab resJson={resAllJson} modes={['tree', 'code']} />,
+      children: (
+        <DataTab
+          resJson={resAllJson}
+          modes={['tree', 'code']}
+        />
+      ),
     },
     {
       key: '5',
       label: '数据',
-      children: <DataTab resJson={that.resData} modes={['code', 'tree']} />,
+      children: (
+        <DataTab
+          resJson={that.resData}
+          modes={['code', 'tree']}
+        />
+      ),
     },
     {
       key: '6',
       label: '历史',
-      children: <HistoryTab onQueryChange={onQueryChange} />,
+      children: (
+        <HistoryTab onQueryChange={onQueryChange} />
+      ),
     },
   ]
 
   function onQueryChange(record) {
-    let { url, method, requestType, params, data, headers } = record
+    let {
+      url,
+      method,
+      requestType,
+      params,
+      data,
+      headers,
+    } = record
     setUrl(url)
     setMethod(method)
     setQueryParams(params)
@@ -514,10 +588,6 @@ const Content = () => {
     headersRef?.current?.initHandle(objToArr(headers))
   }
 
-  function showSettings() {
-    globalSettingsRef?.current?.show()
-  }
-
   function onTabChange(key) {
     setTabKey(key)
     if (key === '6') {
@@ -530,7 +600,6 @@ const Content = () => {
 
   return (
     <div className="app-content">
-      <HandleBar />
       <div className="body-top">
         <Form
           form={headForm}
@@ -539,49 +608,39 @@ const Content = () => {
           name="basic"
           layout="inline"
           size="large"
-          className="body-top-form"
         >
-          <Form.Item className="form-item-input" name="url">
-            <Input
-              allowClear
-              addonBefore={prefixSelector}
-              className="w-full"
-              onBlur={inputOnBlur}
-              onPressEnter={inputOnEnter}
-              placeholder={`请输入完整url，"${testUrl}"， 或接口路径，"/api/xxx"`}
-            />
-          </Form.Item>
-          <Form.Item className="form-item-btn">
-            <Button loading={loading} onClick={send} type="primary" icon={<SendOutlined />} block>
+          <Space.Compact>
+            <Form.Item noStyle name="url">
+              <Input
+                allowClear
+                addonBefore={prefixSelector}
+                className="w-[calc(100vw-250px)]"
+                onBlur={inputOnBlur}
+                onPressEnter={inputOnEnter}
+                placeholder={`请输入完整url，"${testUrl}"， 或接口路径，"/api/xxx"`}
+              />
+            </Form.Item>
+            <Button
+              loading={loading}
+              onClick={send}
+              type="primary"
+              icon={<SendOutlined />}
+            >
               发送
             </Button>
-          </Form.Item>
+          </Space.Compact>
         </Form>
         <div className="head-menu">
-          <Popover
-            content="管理 环境变量 / 全局变量 / 全局参数"
-            // placement="bottomRight"
-            title=""
-          >
-            <Button
-              onClick={showSettings}
-              className="form-item-btn"
-              type="link"
-              icon={
-                <ControlOutlined
-                  style={{
-                    fontSize: 20,
-                  }}
-                />
-              }
-            ></Button>
-          </Popover>
+          <HeadMenu />
         </div>
       </div>
 
       <Tabs
         tabBarExtraContent={{
-          right: tabKey === '6' ? <HistorySearch ref={historySearchRef} /> : null,
+          right:
+            tabKey === '6' ? (
+              <HistorySearch ref={historySearchRef} />
+            ) : null,
         }}
         onTabClick={onTabChange}
         defaultActiveKey={tabKey}
@@ -590,8 +649,6 @@ const Content = () => {
         size="large"
         style={{ flex: 1, overflowY: 'hidden' }}
       />
-
-      <GlobalSettings ref={globalSettingsRef} />
     </div>
   )
 }

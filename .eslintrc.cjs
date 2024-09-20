@@ -21,7 +21,14 @@ module.exports = {
     'plugin:prettier/recommended',
     'prettier',
   ],
-  plugins: ['react-refresh', 'react', 'unused-imports', 'simple-import-sort', 'html', 'prettier'],
+  plugins: [
+    'react-refresh',
+    'react',
+    'unused-imports',
+    'simple-import-sort',
+    'html',
+    'prettier',
+  ],
   ignorePatterns: ['dist', 'node_modules'],
   rules: {
     'prettier/prettier': [
@@ -31,11 +38,14 @@ module.exports = {
         semi: false,
         trailingComma: 'es5',
         endOfLine: 'auto',
-        // printWidth: 80,
+        printWidth: 60,
         // plugins: ['prettier-plugin-tailwindcss'],
       },
     ],
-    'react-refresh/only-export-components': ['warn', { allowConstantExport: true }],
+    'react-refresh/only-export-components': [
+      'warn',
+      { allowConstantExport: true },
+    ],
     'unused-imports/no-unused-imports': 'error',
     'unused-imports/no-unused-vars': [
       'warn',

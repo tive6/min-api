@@ -1,11 +1,21 @@
 import { open, save } from '@tauri-apps/api/dialog'
-import { readTextFile, writeBinaryFile, writeTextFile } from '@tauri-apps/api/fs'
+import {
+  readTextFile,
+  writeBinaryFile,
+  writeTextFile,
+} from '@tauri-apps/api/fs'
 import { downloadDir } from '@tauri-apps/api/path'
 import localforage from 'localforage'
+import { cloneDeep } from 'lodash-es'
 import { parse } from 'path-browserify'
 
 import { defaultHeaders } from '../api/ajax.js'
-import { getCurrentEnv, getSettingsList, setHistoryList } from '../store/index.js'
+import {
+  getCurrentEnv,
+  getSettingsList,
+  getStoreData,
+  setStoreData,
+} from '../store/index.js'
 import { ContentTypeMap } from './config.js'
 import { historyKey, httpRegex } from './consts.js'
 
@@ -17,12 +27,17 @@ export const formatFixedDate = (date, fmt) => {
     return ''
   }
   if (typeof date === 'string') {
-    date = date.includes('0+0000') ? date.substr(0, 19) : date
+    date = date.includes('0+0000')
+      ? date.substr(0, 19)
+      : date
   }
   let o = {
     'M+': date.getMonth() + 1, //月份
     'd+': date.getDate(), //日
-    'h+': date.getHours() % 12 === 0 ? 12 : date.getHours() % 12, //小时
+    'h+':
+      date.getHours() % 12 === 0
+        ? 12
+        : date.getHours() % 12, //小时
     'H+': date.getHours(), //小时
     'm+': date.getMinutes(), //分
     's+': date.getSeconds(), //秒
@@ -39,20 +54,28 @@ export const formatFixedDate = (date, fmt) => {
     6: '六',
   }
   if (/(y+)/.test(fmt)) {
-    fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length))
+    fmt = fmt.replace(
+      RegExp.$1,
+      (date.getFullYear() + '').substr(4 - RegExp.$1.length)
+    )
   }
   if (/(E+)/.test(fmt)) {
     fmt = fmt.replace(
       RegExp.$1,
-      (RegExp.$1.length > 1 ? (RegExp.$1.length > 2 ? '星期' : '周') : '') +
-        week[date.getDay() + '']
+      (RegExp.$1.length > 1
+        ? RegExp.$1.length > 2
+          ? '星期'
+          : '周'
+        : '') + week[date.getDay() + '']
     )
   }
   for (let k in o) {
     if (new RegExp('(' + k + ')').test(fmt)) {
       fmt = fmt.replace(
         RegExp.$1,
-        RegExp.$1.length === 1 ? o[k] : ('00' + o[k]).substr(('' + o[k]).length)
+        RegExp.$1.length === 1
+          ? o[k]
+          : ('00' + o[k]).substr(('' + o[k]).length)
       )
     }
   }
@@ -107,7 +130,10 @@ export const getRandomKey = () => {
   return Math.random().toString(36).slice(2)
 }
 
-export const formContentType = ['application/x-www-form-urlencoded', 'multipart/form-data']
+export const formContentType = [
+  'application/x-www-form-urlencoded',
+  'multipart/form-data',
+]
 
 export const mergeHeaders = (headers = {}, requestType) => {
   let defaultData = {
@@ -134,7 +160,10 @@ export const mergeHeaders = (headers = {}, requestType) => {
     let type = 'json'
     Object.entries(headers).forEach(([k, v]) => {
       let key = k.toLowerCase()
-      if (key === 'content-type' && formContentType.some((item) => v.includes(item))) {
+      if (
+        key === 'content-type' &&
+        formContentType.some((item) => v.includes(item))
+      ) {
         type = 'form'
       }
       opts[key] = v
@@ -176,13 +205,18 @@ export const getFilename = (headers) => {
 }
 
 const genUUID = () => {
-  return Math.random().toString(36).toLowerCase().substring(2)
+  return Math.random()
+    .toString(36)
+    .toLowerCase()
+    .substring(2)
 }
 
 export const getStaticFileInfo = ({ url, headers }) => {
   let contentType = getContentType(headers)
   let { base, ext, name } = parse(url)
-  let arr = Object.entries(ContentTypeMap).find(([k, v]) => contentType.includes(k))
+  let arr = Object.entries(ContentTypeMap).find(([k, v]) =>
+    contentType.includes(k)
+  )
   console.log(arr)
   if (ext) {
     return base
@@ -198,13 +232,21 @@ export const isOctetStream = (headers) => {
   return contentType.includes(OctetStreamType)
 }
 
-export const downloadFile = async ({ url, data, headers }) => {
+export const downloadFile = async ({
+  url,
+  data,
+  headers,
+}) => {
   try {
     let filename = ''
     if (isOctetStream(headers)) {
       filename = getFilename(headers)
     } else {
-      filename = getStaticFileInfo({ url, filename, headers })
+      filename = getStaticFileInfo({
+        url,
+        filename,
+        headers,
+      })
     }
     filename = decodeURIComponent(filename)
     console.log({ filename })
@@ -262,7 +304,10 @@ export async function processStream(reader, cb) {
       buffer += decoder.decode(value)
       // console.log(buffer)
       while (buffer.includes('\n')) {
-        const line = buffer.substring(0, buffer.indexOf('\n'))
+        const line = buffer.substring(
+          0,
+          buffer.indexOf('\n')
+        )
         // console.log(line)
         buffer = buffer.substring(buffer.indexOf('\n') + 1)
 
@@ -297,10 +342,10 @@ export const getLocalHistoryList = async () => {
   }
 }
 
-export async function exportHistory() {
+export async function exportHistory(json) {
   try {
-    let list = await getLocalHistoryList()
-    let filename = `min-api-history-${Date.now()}`
+    // let list = await getLocalHistoryList()
+    let filename = `min-api-settings-${Date.now()}`
     const filePath = await save({
       title: `Save ${filename}`,
       defaultPath: filename,
@@ -312,17 +357,40 @@ export async function exportHistory() {
       ],
     })
     console.log({ filePath })
-    if (!filePath) return
-    await writeTextFile(filePath, JSON.stringify(list, null, 2), {
-      // dir: BaseDirectory.Download,
-      recursive: true,
-    })
+    if (!filePath) return false
+    await writeTextFile(
+      filePath,
+      JSON.stringify(json, null, 2),
+      {
+        // dir: BaseDirectory.Download,
+        recursive: true,
+      }
+    )
+    return true
   } catch (e) {
     console.log(e)
+    return false
   }
 }
 
-export async function importHistory() {
+export async function importHistory(configMap, json) {
+  try {
+    for (let k in json) {
+      console.log(k)
+      let { localKey, storeListKey } = configMap[k]
+      let data = getStoreData(storeListKey)
+      let list = [...cloneDeep(data), ...json[k]]
+      await localforage.setItem(localKey, list)
+      setStoreData(storeListKey, list)
+    }
+    return true
+  } catch (e) {
+    console.log(e)
+    return null
+  }
+}
+
+export async function readImportConfig() {
   try {
     const filePath = await open({
       directory: false,
@@ -336,18 +404,14 @@ export async function importHistory() {
       ],
     })
     console.log({ filePath })
-    if (!filePath) return
+    if (!filePath) return null
     let res = await readTextFile(filePath, {
       recursive: true,
     })
-    let list = JSON.parse(res)
-    console.log(list)
-    let localList = await getLocalHistoryList()
-    let allList = [...localList, ...list]
-    await localforage.setItem(historyKey, allList)
-    setHistoryList(allList)
+    return JSON.parse(res)
   } catch (e) {
     console.log(e)
+    return null
   }
 }
 

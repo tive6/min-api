@@ -1,6 +1,15 @@
-import { Body, fetch as client, ResponseType } from '@tauri-apps/api/http'
+import {
+  Body,
+  fetch as client,
+  ResponseType,
+} from '@tauri-apps/api/http'
 
-import { getCookies, getGlobalConfig, getUrl, mergeHeaders } from '../common/helper.js'
+import {
+  getCookies,
+  getGlobalConfig,
+  getUrl,
+  mergeHeaders,
+} from '../common/helper.js'
 
 export const defaultHeaders = {
   'user-agent': 'Min-Api/Tauri-fetch-4.0.0', // 添加自定义的 User-Agent 头部
@@ -12,7 +21,15 @@ export const timeout = 5 * 60 * 1000
 // https://tauri.app/zh-cn/v1/api/js/http#fetch
 export const http = (opts = {}) => {
   return new Promise((resolve, reject) => {
-    const { url, method, params, data, requestType, headers, callback } = opts
+    const {
+      url,
+      method,
+      params,
+      data,
+      requestType,
+      headers,
+      callback,
+    } = opts
     let { contentType, header } = mergeHeaders(
       {
         ...getGlobalConfig('header'),
@@ -39,7 +56,10 @@ export const http = (opts = {}) => {
     if (requestType === 'download') {
       responseType = ResponseType.Binary
     }
-    console.log('responseType', responseType === 3 ? 'Binary' : 'TEXT')
+    console.log(
+      'responseType',
+      responseType === 3 ? 'Binary' : 'TEXT'
+    )
     console.log('http body', body)
     let path = getUrl(url)
     console.log('http options url', path)
@@ -71,7 +91,15 @@ export const http = (opts = {}) => {
 // https://developer.mozilla.org/zh-CN/docs/Web/API/Fetch_API
 export const stream = (opts = {}) => {
   return new Promise((resolve, reject) => {
-    const { url, method, params, data, requestType, headers, callback } = opts
+    const {
+      url,
+      method,
+      params,
+      data,
+      requestType,
+      headers,
+      callback,
+    } = opts
     let { contentType, header } = mergeHeaders(headers)
     let cookie = getCookies()
     console.log('stream options contentType', contentType)

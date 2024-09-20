@@ -13,7 +13,10 @@ const ResponseTab = ({ resJson, modes }) => {
         indentation: 2,
         search: true,
       }
-      let editor = new JsonEditor(editorWrap.current, options)
+      let editor = new JsonEditor(
+        editorWrap.current,
+        options
+      )
       editor.set(resJson)
       return () => {
         editor.destroy()
@@ -27,7 +30,10 @@ const ResponseTab = ({ resJson, modes }) => {
 
   return (
     <>
-      <div className="w-full h-[calc(100vh-160px)]" ref={editorWrap}></div>
+      <div
+        className="w-full h-[calc(100vh-160px)]"
+        ref={editorWrap}
+      ></div>
     </>
   )
 }

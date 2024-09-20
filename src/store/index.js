@@ -3,7 +3,10 @@ import { cloneDeep } from 'lodash-es'
 import { proxy } from 'valtio'
 import { useProxy } from 'valtio/utils'
 
-import { DefaultRequestType, settingsMap } from '../common/config.js'
+import {
+  DefaultRequestType,
+  settingsMap,
+} from '../common/config.js'
 import { currentEnvKey } from '../common/consts.js'
 
 export const defaultData = {
@@ -28,6 +31,14 @@ export const useStore = () => {
   return useProxy(store)
 }
 
+export function setStoreData(key, data) {
+  store[key] = data
+}
+
+export function getStoreData(key) {
+  return key ? store?.[key] : null
+}
+
 export function resetData() {
   Object.entries(defaultData).forEach(([key, value]) => {
     store[key] = cloneDeep(value)
@@ -36,6 +47,10 @@ export function resetData() {
 
 export function setHistoryList(list) {
   store.historyList = list
+}
+
+export function getHistoryList() {
+  return store.historyList
 }
 
 export async function setSettingsList(type, list) {

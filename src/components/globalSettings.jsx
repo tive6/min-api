@@ -1,4 +1,9 @@
-import { CloseOutlined, GlobalOutlined, PlusOutlined, RetweetOutlined } from '@ant-design/icons'
+import {
+  CloseOutlined,
+  GlobalOutlined,
+  PlusOutlined,
+  RetweetOutlined,
+} from '@ant-design/icons'
 import { useReactive } from 'ahooks'
 import {
   Affix,
@@ -17,17 +22,35 @@ import {
   Tooltip,
 } from 'antd'
 import localforage from 'localforage'
-import { forwardRef, useImperativeHandle, useMemo, useRef } from 'react'
+import {
+  forwardRef,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+} from 'react'
 
-import { HeaderOpts, settingsMap } from '../common/config.js'
-import { environmentKey, httpRegex } from '../common/consts.js'
-import { getCurrentEnv, setCurrentEnv, setSettingsList, useStore } from '../store/index.js'
+import {
+  HeaderOpts,
+  settingsMap,
+} from '../common/config.js'
+import {
+  environmentKey,
+  httpRegex,
+} from '../common/consts.js'
+import { getRandomKey } from '../common/helper.js'
+import {
+  getCurrentEnv,
+  setCurrentEnv,
+  setSettingsList,
+  useStore,
+} from '../store/index.js'
 
 const defaultHeaderItem = [
   {
     k: null,
     v: null,
     enable: false,
+    key: getRandomKey(),
   },
 ]
 
@@ -112,16 +135,32 @@ const Com = (props, ref) => {
                 extra={
                   <Popconfirm
                     title="删除提醒"
-                    description={<div className="w-200px">确认删除该项吗？</div>}
-                    onConfirm={remove.bind(null, field.name)}
+                    description={
+                      <div className="w-200px">
+                        确认删除该项吗？
+                      </div>
+                    }
+                    onConfirm={remove.bind(
+                      null,
+                      field.name
+                    )}
                     placement="left"
                   >
-                    <Button size="small" type="link" danger icon={<CloseOutlined />}></Button>
+                    <Button
+                      size="small"
+                      type="link"
+                      danger
+                      icon={<CloseOutlined />}
+                    ></Button>
                   </Popconfirm>
                 }
               >
                 <Form.Item
-                  label={d.currentKey === 'environment' ? '名称' : 'Key'}
+                  label={
+                    d.currentKey === 'environment'
+                      ? '名称'
+                      : 'Key'
+                  }
                   style={{ marginBottom: 10 }}
                   name={[field.name, 'k']}
                 >
@@ -147,9 +186,15 @@ const Com = (props, ref) => {
                               ref={inputRef}
                               value={d.headerKey}
                               onChange={onHeaderKeyChange}
-                              onKeyDown={(e) => e.stopPropagation()}
+                              onKeyDown={(e) =>
+                                e.stopPropagation()
+                              }
                             />
-                            <Button type="text" icon={<PlusOutlined />} onClick={addHeaderItem}>
+                            <Button
+                              type="text"
+                              icon={<PlusOutlined />}
+                              onClick={addHeaderItem}
+                            >
                               添加
                             </Button>
                           </Space.Compact>
@@ -157,11 +202,18 @@ const Com = (props, ref) => {
                       )}
                     />
                   ) : (
-                    <Input allowClear placeholder="请输入" />
+                    <Input
+                      allowClear
+                      placeholder="请输入"
+                    />
                   )}
                 </Form.Item>
                 <Form.Item
-                  label={d.currentKey === 'environment' ? '域名' : 'Value'}
+                  label={
+                    d.currentKey === 'environment'
+                      ? '域名'
+                      : 'Value'
+                  }
                   style={{ marginBottom: 10 }}
                   name={[field.name, 'v']}
                   rules={
@@ -176,7 +228,9 @@ const Com = (props, ref) => {
                                 return Promise.resolve()
                               }
                               return Promise.reject(
-                                new Error('url 格式不正确，必须以 http(s):// 开头')
+                                new Error(
+                                  'url 格式不正确，必须以 http(s):// 开头'
+                                )
                               )
                             },
                           }),
@@ -203,7 +257,17 @@ const Com = (props, ref) => {
               </Card>
             ))}
 
-            <Button icon={<PlusOutlined />} type="dashed" onClick={() => add()} block>
+            <Button
+              icon={<PlusOutlined />}
+              type="dashed"
+              onClick={() =>
+                add({
+                  ...defaultHeaderItem[0],
+                  key: getRandomKey(),
+                })
+              }
+              block
+            >
               添加
             </Button>
           </div>
@@ -214,11 +278,12 @@ const Com = (props, ref) => {
 
   const envOpts = useMemo(() => {
     return (
-      store.environmentList?.reduce((acc, item) => {
+      store.environmentList?.reduce((acc, item, i) => {
         let k = item?.k?.trim()
         let v = item?.v?.trim()
         if (k && v) {
           acc.push({
+            key: i,
             label: `${k} (${v})`,
             value: v,
           })
@@ -237,7 +302,11 @@ const Com = (props, ref) => {
         <div>
           <Affix offsetTop={78}>
             <div className="flex items-center bg-#fff mt--21px pt-10px pb-1px">
-              <Tag size="large" icon={<GlobalOutlined />} color="success">
+              <Tag
+                size="large"
+                icon={<GlobalOutlined />}
+                color="success"
+              >
                 当前环境：
               </Tag>
               <Select
@@ -250,8 +319,15 @@ const Com = (props, ref) => {
                 }}
                 options={envOpts}
               />
-              <Tooltip placement="topRight" title="修改配置后，需要重新同步">
-                <Button onClick={save} type="link" icon={<RetweetOutlined />}></Button>
+              <Tooltip
+                placement="topRight"
+                title="修改配置后，需要重新同步"
+              >
+                <Button
+                  onClick={save}
+                  type="link"
+                  icon={<RetweetOutlined />}
+                ></Button>
               </Tooltip>
             </div>
           </Affix>
