@@ -17,6 +17,7 @@ import { useEffect, useRef, useState } from 'react'
 import { http, stream } from './api/ajax'
 import {
   DefaultRequestType,
+  disabledAutoCapitalize,
   layout,
   MethodOptions,
 } from './common/config'
@@ -128,6 +129,7 @@ const Content = () => {
     () => {
       if (!headers.length) {
         count.headers = 0
+        setReqHeaders({})
         return
       }
       // console.log(headers)
@@ -612,6 +614,7 @@ const Content = () => {
           <Space.Compact>
             <Form.Item noStyle name="url">
               <Input
+                {...disabledAutoCapitalize}
                 allowClear
                 addonBefore={prefixSelector}
                 className="w-[calc(100vw-250px)]"

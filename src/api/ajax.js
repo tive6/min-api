@@ -30,6 +30,7 @@ export const http = (opts = {}) => {
       headers,
       callback,
     } = opts
+    console.log('old headers', headers)
     let { contentType, header } = mergeHeaders(
       {
         ...getGlobalConfig('header'),

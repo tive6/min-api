@@ -28,6 +28,7 @@ import { useStore } from '../store/index.js'
 import {
   columnsArr,
   contentTypeOptions,
+  disabledAutoCapitalize,
 } from './../common/config'
 import {
   getRandomKey,
@@ -117,7 +118,10 @@ const ParamsFormTab = forwardRef(
     const getLastData = (list) => {
       let arr = []
       list.forEach((item) => {
-        if (item.keys.trim() !== '') {
+        if (
+          item?.keys?.toString()?.trim() !== '' &&
+          data.selectedRowKeys.includes(item.key)
+        ) {
           let { keys, values } = item
           arr.push({ keys, values })
         }
@@ -126,8 +130,9 @@ const ParamsFormTab = forwardRef(
     }
 
     const inputOnChange = (e, id, k) => {
-      let val = e?.target?.value?.trim() || e
-      console.log(val)
+      let val =
+        e?.target?.value?.trim() ||
+        (typeof e === 'string' ? e : '')
       let newData = [...data.list]
       let index = newData.findIndex(
         (item) => id === item.key
@@ -140,7 +145,7 @@ const ParamsFormTab = forwardRef(
 
     const addTr = () => {
       let { keys, values } = data.list.at(-1)
-      if (keys.trim() === '') {
+      if (keys?.trim() === '') {
         notification.info({
           message: '提醒',
           description: '前一项【Key】不能为空！',
@@ -167,25 +172,12 @@ const ParamsFormTab = forwardRef(
       ]
     }
 
-    const selectedRowChange = () => {
-      let arr = []
-      data.selectedRowKeys.map((key) => {
-        data.list.map((item) => {
-          if (item.key === key) {
-            arr.push(item)
-          }
-        })
-      })
-      console.log(arr)
-      getLastData(arr)
-    }
-
     const rowSelection = {
       selectedRowKeys: data.selectedRowKeys,
       columnWidth: 50,
       onChange(k) {
         data.selectedRowKeys = k
-        selectedRowChange()
+        getLastData(data.list)
       },
     }
 
@@ -207,9 +199,9 @@ const ParamsFormTab = forwardRef(
 
     function delRow(key, index) {
       console.log(key, index)
-      data.list = data.list.filter(
-        (item) => item.key !== key
-      )
+      let arr = data.list.filter((item) => item.key !== key)
+      data.list = arr
+      getLastData(arr)
     }
 
     const columns = useMemo(
@@ -263,6 +255,7 @@ const ParamsFormTab = forwardRef(
 
               return (
                 <Input
+                  {...disabledAutoCapitalize}
                   onChange={(e) => {
                     inputOnChange(e, key, dataIndex)
                   }}

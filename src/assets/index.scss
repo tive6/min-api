@@ -26,6 +26,10 @@ a {
   outline: none;
 }
 
+input {
+  //text-transform: none !important;
+}
+
 .container {
   flex: 1;
   display: flex;

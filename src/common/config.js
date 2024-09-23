@@ -256,3 +256,11 @@ export const configColumns = [
     // align: 'center',
   },
 ]
+
+// 禁止自动大写
+export const disabledAutoCapitalize = {
+  // spellCheck: false,
+  // autoComplete: 'off',
+  // autoCorrect: 'off',
+  // autoCapitalize: 'off',
+}

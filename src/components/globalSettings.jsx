@@ -30,6 +30,7 @@ import {
 } from 'react'
 
 import {
+  disabledAutoCapitalize,
   HeaderOpts,
   settingsMap,
 } from '../common/config.js'
@@ -182,6 +183,7 @@ const Com = (props, ref) => {
                           />
                           <Space.Compact block>
                             <Input
+                              {...disabledAutoCapitalize}
                               placeholder="请输入"
                               ref={inputRef}
                               value={d.headerKey}
@@ -203,6 +205,7 @@ const Com = (props, ref) => {
                     />
                   ) : (
                     <Input
+                      {...disabledAutoCapitalize}
                       allowClear
                       placeholder="请输入"
                     />
@@ -239,6 +242,7 @@ const Com = (props, ref) => {
                   }
                 >
                   <Input.TextArea
+                    {...disabledAutoCapitalize}
                     allowClear
                     autoSize={{ minRows: 1, maxRows: 5 }}
                     placeholder="请输入"
@@ -408,6 +412,8 @@ const Com = (props, ref) => {
           {/*</Button>*/}
         </div>
       }
+      focusTriggerAfterClose={false}
+      autoFocus={false}
       width="70%"
       className="global-settings"
       classNames={{

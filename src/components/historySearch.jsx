@@ -7,6 +7,7 @@ import {
   useRef,
 } from 'react'
 
+import { disabledAutoCapitalize } from '../common/config.js'
 import { getLocalHistoryList } from '../common/helper.js'
 import { setHistoryList, useStore } from '../store/index.js'
 
@@ -48,6 +49,7 @@ const Com = forwardRef((props, ref) => {
   return (
     <div className="tab-extra">
       <Input
+        {...disabledAutoCapitalize}
         defaultValue={store.keywords}
         ref={inputRef}
         onChange={(e) => (store.keywords = e.target.value)}
