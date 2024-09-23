@@ -259,8 +259,8 @@ export const configColumns = [
 
 // 禁止自动大写
 export const disabledAutoCapitalize = {
-  // spellCheck: false,
-  // autoComplete: 'off',
-  // autoCorrect: 'off',
-  // autoCapitalize: 'off',
+  spellCheck: false,
+  autoComplete: 'off',
+  autoCorrect: 'off',
+  autoCapitalize: 'off',
 }
