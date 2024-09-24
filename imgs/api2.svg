@@ -1,0 +1,40 @@
+<svg width="240" height="240" viewBox="0 0 240 240" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" rx="40" ry="40"
+        width="240" height="240"
+        style="fill:transparent; stroke:transparent; stroke-width:2; stroke-linecap:round; stroke-linejoin:round"/>
+  <rect x="10" y="10" rx="40" ry="40"
+        width="220" height="220"
+        style="fill:#fff; "/>
+
+  <circle cx="120" cy="120" r="20" stroke="#B5E0D4" stroke-width="16" stroke-linecap="round" stroke-linejoin="round"
+          fill="#227D4C"/>
+  <circle cx="120" cy="50" r="10" stroke="#B5E0D4" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"
+          fill="#227D4C"/>
+  <circle cx="190" cy="120" r="10" stroke="#B5E0D4" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"
+          fill="#227D4C"/>
+  <circle cx="50" cy="120" r="10" stroke="#B5E0D4" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"
+          fill="#227D4C"/>
+  <circle cx="120" cy="190" r="10" stroke="#B5E0D4" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"
+          fill="#227D4C"/>
+
+  <path d="M120 60V100" stroke="#B5E0D4" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M140 120H180" stroke="#B5E0D4" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M120 140V180" stroke="#B5E0D4" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M100 120H60" stroke="#B5E0D4" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+
+<!--
+path
+
+M10 10 坐标点开始位置 x:10, y:10
+M120 60V90 从(120, 60) 绘制垂直线到(120, 90)
+M150 120H180 从(150, 120) 绘制水平线到(180, 120)
+Z 闭合路径
+C 绘制贝塞尔曲线
+S 绘制平滑贝塞尔曲线
+Q 绘制二次贝塞尔曲线
+
+-->
+
+<!--  <text style="font-size: 2px" x="10" y="12" fill="#333">API</text>-->
+
+</svg>
