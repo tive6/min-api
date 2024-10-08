@@ -14,6 +14,7 @@ import { useEffect } from 'react'
 import { attachConsole, info } from 'tauri-plugin-log-api'
 
 import { SkipVersion } from './common/consts.js'
+import { windowEventListener } from './common/helper.js'
 import Content from './content'
 import { initGlobalSettings } from './store/index.js'
 
@@ -204,11 +205,14 @@ function App() {
 
     main()
     initGlobalSettings()
+    windowEventListener('add')
 
     return () => {
       unlisten && unlisten()
       // detach the browser console from the log stream
       detach && detach()
+
+      windowEventListener('remove')
     }
   }, [])
   return (

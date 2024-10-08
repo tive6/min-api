@@ -495,3 +495,36 @@ export function getUrl(url) {
   }
   return uri
 }
+
+// 阻止右键菜单
+export function contextmenuHandler(event) {
+  event.preventDefault()
+}
+
+// 阻止F12、Ctrl+Shift+I、Ctrl+Shift+C快捷键打开 开发者工具
+export function keyDownHandler(event) {
+  const { keyCode, ctrlKey, shiftKey } = event
+  if (
+    keyCode === 123 ||
+    (ctrlKey && shiftKey && [67, 73].includes(keyCode))
+  ) {
+    // F12 123
+    // Ctrl+Shift+I 73
+    // Ctrl+Shift+C 67
+    event.preventDefault()
+    event.stopPropagation()
+    event.returnValue = false
+    return false
+  }
+}
+
+export function windowEventListener(type) {
+  document[`${type}EventListener`](
+    'contextmenu',
+    contextmenuHandler
+  )
+  document[`${type}EventListener`](
+    'keydown',
+    keyDownHandler
+  )
+}
