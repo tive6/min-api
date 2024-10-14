@@ -50,6 +50,7 @@ const defaultHeaderItem = [
   {
     k: null,
     v: null,
+    desc: '',
     enable: false,
     key: getRandomKey(),
   },
@@ -104,6 +105,28 @@ const Com = (props, ref) => {
       inputRef.current?.focus()
     }, 0)
   }
+
+  const envRules = useMemo(() => {
+    return d.currentKey === 'environment'
+      ? [
+          {
+            required: true,
+          },
+          ({ getFieldValue }) => ({
+            validator(_, value) {
+              if (httpRegex.test(value)) {
+                return Promise.resolve()
+              }
+              return Promise.reject(
+                new Error(
+                  'url 格式不正确，必须以 http(s):// 开头'
+                )
+              )
+            },
+          }),
+        ]
+      : []
+  }, [d.currentKey])
 
   let formContent = (
     <Form
@@ -219,27 +242,19 @@ const Com = (props, ref) => {
                   }
                   style={{ marginBottom: 10 }}
                   name={[field.name, 'v']}
-                  rules={
-                    d.currentKey === 'environment'
-                      ? [
-                          {
-                            required: true,
-                          },
-                          ({ getFieldValue }) => ({
-                            validator(_, value) {
-                              if (httpRegex.test(value)) {
-                                return Promise.resolve()
-                              }
-                              return Promise.reject(
-                                new Error(
-                                  'url 格式不正确，必须以 http(s):// 开头'
-                                )
-                              )
-                            },
-                          }),
-                        ]
-                      : []
-                  }
+                  rules={envRules}
+                >
+                  <Input.TextArea
+                    {...disabledAutoCapitalize}
+                    allowClear
+                    autoSize={{ minRows: 1, maxRows: 5 }}
+                    placeholder="请输入"
+                  />
+                </Form.Item>
+                <Form.Item
+                  label="desc"
+                  style={{ marginBottom: 10 }}
+                  name={[field.name, 'desc']}
                 >
                   <Input.TextArea
                     {...disabledAutoCapitalize}
