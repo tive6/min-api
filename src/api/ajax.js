@@ -1,6 +1,6 @@
 import {
   Body,
-  fetch as client,
+  fetch,
   ResponseType,
 } from '@tauri-apps/api/http'
 
@@ -12,7 +12,9 @@ import {
 } from '../common/helper.js'
 
 export const defaultHeaders = {
-  'user-agent': 'Min-Api/Tauri-fetch-4.0.0', // 添加自定义的 User-Agent 头部
+  'user-agent':
+    'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36 Edg/120.0.0.0',
+  // 'user-agent': 'Min-Api/Tauri-fetch-4.0.0', // 添加自定义的 User-Agent 头部
   // 'content-type': 'application/json',
 }
 
@@ -30,7 +32,7 @@ export const http = (opts = {}) => {
       headers,
       callback,
     } = opts
-    console.log('old headers', headers)
+    console.log('user input headers', headers)
     let { contentType, header } = mergeHeaders(
       {
         ...getGlobalConfig('header'),
@@ -38,10 +40,12 @@ export const http = (opts = {}) => {
       },
       requestType
     )
-    let cookie = getCookies()
+    let headerCookie = (header?.cookie || '') + ';'
+    let cookie = getCookies(headerCookie)
     console.log('http options header', header)
     console.log('http options cookie', cookie)
     console.log('http options data', data)
+    console.log('http options params', params)
     let body = null
     if (contentType === 'form') {
       body = Body.form(data)
@@ -64,7 +68,7 @@ export const http = (opts = {}) => {
     console.log('http body', body)
     let path = getUrl(url)
     console.log('http options url', path)
-    client(path, {
+    fetch(url, {
       method: method || 'GET',
       headers: {
         ...header,
@@ -102,7 +106,8 @@ export const stream = (opts = {}) => {
       callback,
     } = opts
     let { contentType, header } = mergeHeaders(headers)
-    let cookie = getCookies()
+    let headerCookie = (header?.cookie || '') + ';'
+    let cookie = getCookies(headerCookie)
     console.log('stream options contentType', contentType)
     console.log('stream options header', header)
     console.log('stream options cookie', cookie)
@@ -122,22 +127,23 @@ export const stream = (opts = {}) => {
     let uri = `${url}${queryStr ? `?${queryStr}` : ''}`
     let path = getUrl(uri)
     console.log('http options url', path)
-    fetch(path, {
-      method: method || 'GET',
-      headers: {
-        'content-type': 'application/json',
-        ...getGlobalConfig('header'),
-        ...defaultHeaders,
-        ...headers,
-        cookie,
-      },
-      body: body,
-      timeout,
-      mode: 'cors',
-      cache: 'default',
-      credentials: 'same-origin', // include, *same-origin, omit
-      redirect: 'follow', // manual, *follow, error
-    })
+    window
+      .fetch(path, {
+        method: method || 'GET',
+        headers: {
+          'content-type': 'application/json',
+          ...defaultHeaders,
+          ...getGlobalConfig('header'),
+          ...headers,
+          cookie,
+        },
+        body: body,
+        timeout,
+        mode: 'cors',
+        cache: 'default',
+        credentials: 'same-origin', // include, *same-origin, omit
+        redirect: 'follow', // manual, *follow, error
+      })
       .then((res) => {
         callback && callback(res)
         resolve(res)

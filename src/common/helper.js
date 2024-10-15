@@ -376,10 +376,9 @@ export async function exportHistory(json) {
 export async function importHistory(configMap, json) {
   try {
     for (let k in json) {
-      console.log(k)
       let { localKey, storeListKey } = configMap[k]
-      let data = getStoreData(storeListKey)
-      let list = [...cloneDeep(data), ...json[k]]
+      let data = getStoreData(storeListKey) || []
+      let list = [...cloneDeep(data), ...(json[k] || [])]
       await localforage.setItem(localKey, list)
       setStoreData(storeListKey, list)
     }
@@ -475,14 +474,14 @@ export function getGlobalConfig(type) {
   return obj
 }
 
-export function getCookies() {
+export function getCookies(initialValue = '') {
   let list = getSettingsList('cookie')
   return list.reduce((acc, { k, v, enable }) => {
     if (enable) {
       acc += `${k}=${v}; `
     }
     return acc
-  }, '')
+  }, initialValue)
 }
 
 export function getUrl(url) {

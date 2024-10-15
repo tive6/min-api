@@ -87,6 +87,7 @@ const Com = () => {
     if (type === 'import') {
       let json = await readImportConfig()
       if (!json) return null
+      console.log(json)
       temp.current = json
       return Object.entries(json).map(([k, list]) => {
         return {

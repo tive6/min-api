@@ -35,7 +35,6 @@ import {
   numbersArrayToText,
   objToArr,
   processStream,
-  queryToObj,
 } from './common/helper'
 import { getRandomKey } from './common/helper'
 import DataTab from './components/dataTab'
@@ -85,14 +84,14 @@ const Content = () => {
   const [status, setStatus] = useState(0)
   const [loading, setLoading] = useState(false)
 
-  useEffect(() => {
-    if (method === 'GET') {
-      let { queryArr } = queryToObj(url)
-      // console.log(queryArr)
-      let obj = arrToObj(queryArr)
-      setQueryParams(obj)
-    }
-  }, [url])
+  // useEffect(() => {
+  //   if (method === 'GET') {
+  //     let { queryArr } = queryToObj(url)
+  //     // console.log(queryArr)
+  //     let obj = arrToObj(queryArr)
+  //     setQueryParams(obj)
+  //   }
+  // }, [url])
 
   useDebounceEffect(
     () => {
@@ -343,10 +342,10 @@ const Content = () => {
     console.log(method, url)
     setUrl(url)
     let queryObj = {}
-    if (url.includes('?')) {
-      queryObj = queryToObj(url).queryObj
-      url = url.match(/(\S*)\?/)[1]
-    }
+    // if (url.includes('?')) {
+    //   queryObj = queryToObj(url).queryObj
+    //   url = url.match(/(\S*)\?/)[1]
+    // }
     let obj = {}
     if (that.paramsTabKey === '11') {
       if (JSON.stringify(reqParams) !== '{}') {
