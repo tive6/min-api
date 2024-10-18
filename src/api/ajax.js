@@ -68,7 +68,7 @@ export const http = (opts = {}) => {
     console.log('http body', body)
     let path = getUrl(url)
     console.log('http options url', path)
-    fetch(url, {
+    fetch(path, {
       method: method || 'GET',
       headers: {
         ...header,
