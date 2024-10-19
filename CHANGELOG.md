@@ -1,5 +1,53 @@
 
 
+## [4.8.2](https://github.com/tive6/min-api/compare/4.5.0...4.8.2) (2024-10-19)
+
+
+### ✨ Features | 新功能
+
+* logo 替换 ([dff745d](https://github.com/tive6/min-api/commit/dff745dcb0b236dacad09c6cd1bc06ea118a91ff))
+* 使用 localforage 替换 localStorage；上传文件 formData 数据 由 arrayBuffer 修改为 Uint8Array ([65f24b6](https://github.com/tive6/min-api/commit/65f24b6cd6b70cc323d000b8dcd597b53833285e))
+* 修改打包命令为 pnpm app ([c9decdc](https://github.com/tive6/min-api/commit/c9decdcdbe4955e515d8d202e77d8ae39c9b3679))
+* 全局配置-增加 desc 描述项 ([fe97f1c](https://github.com/tive6/min-api/commit/fe97f1c6bf89998e631a0498e7b04761bb6f477b))
+* 发送请求 增加 query， body 全局参数 ([ba217f6](https://github.com/tive6/min-api/commit/ba217f6fc2bb77fd15432e42a6a49e43aa8027de))
+* 增加 contentTypeOptions  text/plain application/xml text/xml ([1f815b4](https://github.com/tive6/min-api/commit/1f815b4184c851f9d0f628933aa7b106a172a6d2))
+* 增加 阻止右键菜单；阻止F12、Ctrl+Shift+I、Ctrl+Shift+C快捷键打开 开发者工具；增加 start , pack 启动和打包命令 ([b0a23eb](https://github.com/tive6/min-api/commit/b0a23eb81c497150b2734a357f71f68e6342875f))
+* 增加全局参数 headers ([cf92097](https://github.com/tive6/min-api/commit/cf9209764e3db1f75dfb4059c385845f3b216917))
+* 增加全局参数：全局 cookie 配置 ([28d4aba](https://github.com/tive6/min-api/commit/28d4aba0cbbfc503982bd630085c68719ad9dacc))
+* 增加全局环境-域名配置和相关url合法性验证 ([1fb45da](https://github.com/tive6/min-api/commit/1fb45da1e9cad907c0c3ca6043938438e9059e00))
+* 增加全局配置和历史记录导入、导出功能；优化文件上传操作；优化悬浮按钮和全局配置按钮；优化请求参数展示和过多滚动；优化 eslint 配置；log日志增加环境区分，debug调试模式不在控制台打印；文件格式化 ([bd6b820](https://github.com/tive6/min-api/commit/bd6b820730610a3cd70804266ab20271dd5914e5))
+* 解决导入导出失败的问题； url后的Query参数自动格式化关闭； ([d44131e](https://github.com/tive6/min-api/commit/d44131e319a9c69c2c1455e5b5e93182a7a711e3))
+
+
+###   Bug Fixes | Bug 修复
+
+* 修复搜索历史记录异常问题 ([e498be1](https://github.com/tive6/min-api/commit/e498be10546b2215d83c207099a5511f5eb41ccb))
+* 解决 localforage 不能保存 Proxy 对象的问题，深拷贝解除 Proxy ([0a170d0](https://github.com/tive6/min-api/commit/0a170d0728d846cc93d77380d10cef23ec1d9717))
+* 解决 全局环境 不自动补全 base url 的问题 ([5f3c112](https://github.com/tive6/min-api/commit/5f3c112721f0c2a02e86d22d5fee72d8779740c5))
+* 解决Mac 中首字母自动转大写的问题：https://tiven.cn/p/c81a08f9/ ([54e354c](https://github.com/tive6/min-api/commit/54e354ca5e64687735562c6ba400d4c20bfd6183))
+* 解决Mac 中首字母自动转大写的问题：https://tiven.cn/p/c81a08f9/    代码优化 ([36f572d](https://github.com/tive6/min-api/commit/36f572d602759c5f59527f2d57ce3515fa6c4c1c))
+
+
+###   Chores | 其他更新
+
+* 升级 vite 和 @vitejs/plugin-react 版本，解决 Warning with use client directive with Vite 的警告⚠ ([2bdc47d](https://github.com/tive6/min-api/commit/2bdc47da9833fe54d56b58e1428bbd8ead095f18))
+
+
+###   Documentation | 文档
+
+* 更新 description ([79248d3](https://github.com/tive6/min-api/commit/79248d3ce125d4ee497236684eb4abcc39d1dab4))
+* 更新 version ([e054659](https://github.com/tive6/min-api/commit/e0546599d66a89728c01029866fdab852b6de5af))
+* 更新功能介绍 ([f8aa1e0](https://github.com/tive6/min-api/commit/f8aa1e0c5f6325b4d203e8059b1ecbcc4f203a2a))
+* 编写 readme 文档，增加项目描述和功能介绍 ([72b1555](https://github.com/tive6/min-api/commit/72b1555ef09162d87b7ff172b56ed45f028a2112))
+
+
+### ⚡ Performance Improvements | 性能优化
+
+* 优化，具体化，明确化  log 输出 ([95568ec](https://github.com/tive6/min-api/commit/95568ec330c2be12de84882f4def0f195f3a7ee8))
+* 使用 unocss 替换 内联style样式，优化 http 参数 ([56db3bd](https://github.com/tive6/min-api/commit/56db3bd17ff73f324f2448fae21453d519247279))
+* 全局环境配置动态检测和自动补全 ([459319e](https://github.com/tive6/min-api/commit/459319e0be7d193419886aed814d96369a704d0b))
+* 整理 config.js 和 consts.js ; 调整提示文案 ([07ee3be](https://github.com/tive6/min-api/commit/07ee3be8f1fc817f132eead236c5e9a4b2ecffa0))
+
 ## [4.5.0](https://github.com/tive6/min-api/compare/4.4.1...4.5.0) (2024-08-08)
 
 
