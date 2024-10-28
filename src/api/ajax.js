@@ -149,7 +149,7 @@ export const stream = (opts = {}) => {
         resolve(res)
       })
       .catch((e) => {
-        reject(e)
+        reject(`\n请求地址：${path}\n错误信息：${e}`)
       })
   })
 }

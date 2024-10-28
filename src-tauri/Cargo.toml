@@ -1,6 +1,6 @@
 [package]
 name = "min-api"
-version = "4.8.0"
+version = "4.9.1"
 description = "一个基于Tauri和React开发，用于http/https接口测试的轻量级工具"
 authors = ["Tive"]
 license = ""

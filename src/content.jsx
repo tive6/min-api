@@ -321,6 +321,15 @@ const Content = () => {
       return status === 200 ? 1 : 0
     } catch (e) {
       console.log('fetchOfStream err', e)
+      notification.error({
+        message: '提醒',
+        description: (
+          <div className="break-all whitespace-pre-wrap">
+            请求失败！{e}
+          </div>
+        ),
+        // duration: 0,
+      })
       return 0
     }
   }
