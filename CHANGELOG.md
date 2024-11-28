@@ -1,5 +1,22 @@
 
 
+## [4.9.3](https://github.com/tive6/min-api/compare/4.8.2...4.9.3) (2024-11-28)
+
+
+### ✨ Features | 新功能
+
+* 添加 Info.plist 配置文件， 设置软件开发地区 CFBundleDevelopmentRegion: Chinese (中文区域开发) , 解决 open 打开系统文件弹窗中的文字 英文 -> 中午 ([93e4c0b](https://github.com/tive6/min-api/commit/93e4c0bdeefc90ff346ba6cadfeb370cc4b0c6d4))
+
+
+###   Bug Fixes | Bug 修复
+
+* url 首尾空格处理 ([7d17661](https://github.com/tive6/min-api/commit/7d17661a13593e407907806af6fd938dc772fa8a))
+
+
+### ⚡ Performance Improvements | 性能优化
+
+* 流式请求err，右上角弹出提示 ([3f55dc3](https://github.com/tive6/min-api/commit/3f55dc3216d12d288a7a9e572246246bef7c49cf))
+
 ## [4.8.2](https://github.com/tive6/min-api/compare/4.5.0...4.8.2) (2024-10-19)
 
 
