@@ -486,7 +486,7 @@ export function getCookies(initialValue = '') {
 
 export function getUrl(url) {
   let uri = ''
-  if (httpRegex.test(url)) {
+  if (httpRegex.test(url.trim())) {
     uri = url
   } else {
     let baseUrl = getCurrentEnv()?.trim()

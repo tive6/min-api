@@ -340,7 +340,7 @@ const Content = () => {
     let { url, method } = headForm.getFieldsValue()
     if (!store.currentEnv) {
       console.log('currentEnv', store.currentEnv)
-      if (!httpRegex.test(url)) {
+      if (!httpRegex.test(url.trim())) {
         notification.warning({
           message: '提醒',
           description: '请配置环境变量，或输入合法 url ！',
