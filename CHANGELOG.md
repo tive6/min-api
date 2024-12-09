@@ -1,5 +1,17 @@
 
 
+## [4.9.4](https://github.com/tive6/min-api/compare/4.9.3...4.9.4) (2024-12-09)
+
+
+### ✨ Features | 新功能
+
+* 头部增加快捷下拉菜单；增加 Query参数格式化的功能；增加历史记录备注功能 ([16618f5](https://github.com/tive6/min-api/commit/16618f5b2f3ffc2c77b65a6f294c91d44ee9a845))
+
+
+###   Documentation | 文档
+
+* 更新 readme 文档 ([1c41ac6](https://github.com/tive6/min-api/commit/1c41ac65acfe4ff093c722a5bb006627820a96e5))
+
 ## [4.9.3](https://github.com/tive6/min-api/compare/4.8.2...4.9.3) (2024-11-28)
 
 
