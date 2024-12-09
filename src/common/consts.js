@@ -11,3 +11,15 @@ export const httpRegex = /^https?:\/\/[a-zA-Z0-9]+/i
 
 // export const testUrl = 'https://dog.ceo/api/breeds/image/random'
 export const testUrl = 'https://tiven.cn/api/ping'
+
+// export const sendMenuItems = [
+//   {
+//     label: 'Query参数格式化',
+//     key: 'queryFormat',
+//     disabled: method !== 'GET',
+//   },
+//   {
+//     label: 'Json ⇋ Form',
+//     key: 'jsonForm',
+//   },
+// ]

@@ -2,12 +2,19 @@ import {
   ClearOutlined,
   ExportOutlined,
   ImportOutlined,
+  InfoCircleOutlined,
   ReloadOutlined,
   SyncOutlined,
 } from '@ant-design/icons'
-import { Tag } from 'antd'
+import { Input, Tag, Tooltip } from 'antd'
+import localforage from 'localforage'
 import propTypes from 'prop-types'
 import { useMemo } from 'react'
+
+import { disabledAutoCapitalize } from '../common/config.js'
+import { historyKey } from '../common/consts.js'
+import { getLocalHistoryList } from '../common/helper.js'
+import { setHistoryList } from '../store/index.js'
 
 const menuItems = [
   {
@@ -68,19 +75,60 @@ CustomTd.propTypes = {
 }
 
 export default function useBaseConfig() {
+  async function editByKey(key, e) {
+    console.log('editByKey', key, e)
+    try {
+      const localHistoryList = await getLocalHistoryList()
+      let list = localHistoryList.map((item) => {
+        if (item.key === key) {
+          item.remark = e.target.value
+        }
+        return item
+      })
+      await localforage.setItem(historyKey, list)
+      setHistoryList(list)
+      e.target.blur()
+    } catch (e) {
+      console.log(e)
+    }
+  }
+
   const historyBaseColumns = [
     {
       title: 'Url',
       dataIndex: 'url',
       key: 'url',
-      width: '200px',
+      width: 200,
       textWrap: 'word-break',
       // wordBreak: 'break-word',
       // ellipsis: true,
       // align: 'center',
       fixed: 'left',
       className: 'history-list-link',
-      render: (text) => <CustomTd text={text} />,
+      render: (text, record) => (
+        <div className="flex flex-col h-100% url-wrap">
+          <CustomTd text={text} />
+          <Input
+            defaultValue={record.remark}
+            className="mt-10px"
+            placeholder="备注"
+            variant="filled"
+            {...disabledAutoCapitalize}
+            onPressEnter={(e) => {
+              editByKey(record.key, e)
+            }}
+            suffix={
+              <Tooltip title="编辑后，回车保存">
+                <InfoCircleOutlined
+                  style={{
+                    color: 'rgba(0,0,0,.45)',
+                  }}
+                />
+              </Tooltip>
+            }
+          />
+        </div>
+      ),
     },
     {
       title: '状态',

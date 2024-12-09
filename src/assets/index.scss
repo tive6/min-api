@@ -88,6 +88,13 @@ input {
   @include scrollbar;
 }
 
+.url-wrap {
+
+  .history-list-data {
+    flex: 1;
+  }
+}
+
 .dragger-box {
   .ant-upload-drag {
     margin-top: 10px;

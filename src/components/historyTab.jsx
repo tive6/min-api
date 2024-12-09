@@ -1,4 +1,4 @@
-import { Space, Table } from 'antd'
+import { Space, Table, Tooltip } from 'antd'
 import localforage from 'localforage'
 import propTypes from 'prop-types'
 import { useEffect } from 'react'
@@ -40,7 +40,11 @@ const Com = ({ onQueryChange }) => {
       align: 'center',
       render: (text, record) => (
         <Space size="small">
-          <a onClick={() => onQueryChange(record)}>请求</a>
+          <Tooltip placement="top" title="重新请求">
+            <a onClick={() => onQueryChange(record)}>
+              请求
+            </a>
+          </Tooltip>
           <a
             onClick={() => deleteRow(record)}
             className="text-#FF4D4F"

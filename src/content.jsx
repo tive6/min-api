@@ -1,8 +1,8 @@
-import { SendOutlined } from '@ant-design/icons'
+import { DownOutlined } from '@ant-design/icons'
 import { useDebounceEffect, useReactive } from 'ahooks'
 import {
   Badge,
-  Button,
+  Dropdown,
   Form,
   Input,
   notification,
@@ -25,26 +25,26 @@ import {
   historyKey,
   httpRegex,
   testUrl,
-} from './common/consts.js'
+} from './common/consts'
 import {
   arrToObj,
   downloadFile,
   fileToUint8Array,
   formatFixedDate,
   getLocalHistoryList,
+  getRandomKey,
   numbersArrayToText,
   objToArr,
   processStream,
 } from './common/helper'
-import { getRandomKey } from './common/helper'
 import DataTab from './components/dataTab'
-import HeadMenu from './components/headMenu.jsx'
+import HeadMenu from './components/headMenu'
 import HistorySearch from './components/historySearch'
 import HistoryTab from './components/historyTab'
 import ParamsFormTab from './components/paramsFormTab'
 import ParamsJsonTab from './components/paramsJsonTab'
 import SubTabBarExtra from './components/subTabBarExtra'
-import { setHistoryList, useStore } from './store/index.js'
+import { setHistoryList, useStore } from './store/index'
 const { Option } = Select
 
 const Content = () => {
@@ -55,6 +55,8 @@ const Content = () => {
 
   const currentFile = useRef(null)
   const [headForm] = Form.useForm()
+  const method = Form.useWatch('method', headForm)
+
   const store = useStore()
 
   const count = useReactive({
@@ -69,29 +71,18 @@ const Content = () => {
     isUpload: false,
     resData: '',
     fileKey: '',
+    loading: false,
   })
 
   const [params, setParams] = useState([])
   const [headers, setHeaders] = useState([])
-  const [url, setUrl] = useState(testUrl)
   const [reqParams, setReqParams] = useState({})
   const [reqJson, setReqJson] = useState({})
   const [queryParams, setQueryParams] = useState({})
   const [reqHeaders, setReqHeaders] = useState({})
-  const [method, setMethod] = useState('GET')
   const [resAllJson, setAllResJson] = useState({})
   const [tabKey, setTabKey] = useState('6')
   const [status, setStatus] = useState(0)
-  const [loading, setLoading] = useState(false)
-
-  // useEffect(() => {
-  //   if (method === 'GET') {
-  //     let { queryArr } = queryToObj(url)
-  //     // console.log(queryArr)
-  //     let obj = arrToObj(queryArr)
-  //     setQueryParams(obj)
-  //   }
-  // }, [url])
 
   useDebounceEffect(
     () => {
@@ -100,7 +91,7 @@ const Content = () => {
         return
       }
       // console.log(params)
-      let obj = arrToObj(params)
+      const obj = arrToObj(params)
       setReqParams(obj)
       count.params = params.length
     },
@@ -132,7 +123,7 @@ const Content = () => {
         return
       }
       // console.log(headers)
-      let obj = arrToObj(headers)
+      const obj = arrToObj(headers)
       setReqHeaders(obj)
       count.headers = headers.length
     },
@@ -156,20 +147,13 @@ const Content = () => {
     }
   }
 
-  const inputOnBlur = () => {
-    let { url } = headForm.getFieldsValue()
-    // console.log(url)
-    setUrl(url)
-  }
-
   const inputOnEnter = () => {
-    inputOnBlur()
     send()
   }
 
   const setHistoryData = async (opts) => {
     try {
-      let list = await getLocalHistoryList()
+      const list = await getLocalHistoryList()
       list.push(opts)
       await localforage.setItem(historyKey, list)
       if (historySearchRef?.current) {
@@ -188,23 +172,24 @@ const Content = () => {
   }
 
   const httpHandle = async (p) => {
-    let date = formatFixedDate(
+    const date = formatFixedDate(
       new Date(),
       'yyyy-MM-dd HH:mm:ss'
     )
-    let opts = {
+    const opts = {
       ...p,
       createTime: date,
       key: getRandomKey(),
     }
     let state = 0
     try {
-      setLoading(true)
+      that.loading = true
       if (store.requestType === 'stream') {
         state = await fetchOfStream(p)
         return
       }
-      let res = await http(p)
+      const res = await http(p)
+      if (!that.loading) return
       console.log('http res', res)
       let {
         url,
@@ -237,14 +222,17 @@ const Content = () => {
       that.resData = data
       setTabKey('5')
       state = 1
-      // console.log(headers)
       if (
         status === 200 &&
         data &&
         store.requestType === 'download'
       ) {
         console.log('downloadFile start')
-        let err = await downloadFile({ url, data, headers })
+        const err = await downloadFile({
+          url,
+          data,
+          headers,
+        })
         console.log('downloadFile err', err)
         if (err) {
           data = err
@@ -264,7 +252,7 @@ const Content = () => {
       console.log('http err', err)
       notification.error({
         message: '提醒',
-        description: `请求失败！`,
+        description: '请求失败！',
       })
       setTabKey('4')
       setAllResJson(err)
@@ -278,14 +266,15 @@ const Content = () => {
         status: state,
       })
       setQueryParams({})
-      setLoading(false)
+      that.loading = false
     }
   }
 
   async function fetchOfStream(p) {
     try {
-      let res = await stream(p)
-      let {
+      const res = await stream(p)
+      if (!that.loading) return
+      const {
         body,
         bodyUsed,
         headers,
@@ -302,10 +291,6 @@ const Content = () => {
       await processStream(reader, (str) => {
         that.resData = [...that.resData, str]
       })
-      // console.log(headers.entries())
-      // res?.headers?.entries()?.forEach?.((item) => {
-      //   console.log(item)
-      // })
       setAllResJson({
         body: [],
         bodyUsed,
@@ -336,8 +321,8 @@ const Content = () => {
 
   const send = async () => {
     // loading 是否正在请求
-    if (loading) return
-    let { url, method } = headForm.getFieldsValue()
+    if (that.loading) return
+    const { url, method } = headForm.getFieldsValue()
     if (!store.currentEnv) {
       console.log('currentEnv', store.currentEnv)
       if (!httpRegex.test(url.trim())) {
@@ -349,12 +334,7 @@ const Content = () => {
       }
     }
     console.log(method, url)
-    setUrl(url)
-    let queryObj = {}
-    // if (url.includes('?')) {
-    //   queryObj = queryToObj(url).queryObj
-    //   url = url.match(/(\S*)\?/)[1]
-    // }
+    const queryObj = {}
     let obj = {}
     if (that.paramsTabKey === '11') {
       if (JSON.stringify(reqParams) !== '{}') {
@@ -366,7 +346,7 @@ const Content = () => {
       }
     }
     obj = Object.assign({}, queryParams, queryObj, obj)
-    let p = {
+    const p = {
       url,
       method,
       headers: reqHeaders,
@@ -374,9 +354,11 @@ const Content = () => {
     if (method === 'GET') {
       p.params = obj
     } else {
-      let params = Object.assign({}, queryParams, queryObj)
-      // console.log(reqParams)
-      // console.log(reqJson)
+      const params = Object.assign(
+        {},
+        queryParams,
+        queryObj
+      )
       p.data = Object.assign({}, reqParams, reqJson)
       p.params = params
       console.log('params', params)
@@ -387,7 +369,7 @@ const Content = () => {
           str += `&${k}=${params[k]}`
         })
         console.log(`${url}?${str.slice(1)}`)
-        let fd = {
+        const fd = {
           method,
           url: `${url}?${str.slice(1)}`,
         }
@@ -403,12 +385,12 @@ const Content = () => {
           })
           return false
         }
-        let { name, type } = currentFile.current
-        let uint8Array = await fileToUint8Array(
+        const { name, type } = currentFile.current
+        const uint8Array = await fileToUint8Array(
           currentFile.current
         )
         // let arrayBuffer = await currentFile.current.arrayBuffer()
-        let fileKey = p.data.file || 'file'
+        const fileKey = p.data.file || 'file'
         that.fileKey = fileKey
         Reflect.deleteProperty(p.data, 'file')
         p.data[fileKey] = {
@@ -439,7 +421,7 @@ const Content = () => {
 
   const prefixSelector = (
     <Form.Item name="method" noStyle>
-      <Select onChange={setMethod} style={{ width: 120 }}>
+      <Select style={{ width: 120 }}>
         {MethodOptions.map(({ value, label }) => (
           <Option key={value} value={value}>
             {label}
@@ -469,7 +451,12 @@ const Content = () => {
           activeKey={that.paramsTabKey}
           onChange={paramsTabChange}
           tabBarExtraContent={{
-            right: <SubTabBarExtra />,
+            right: (
+              <div className="flex justify-between items-center w-[calc(100vw-300px)]">
+                <div />
+                <SubTabBarExtra />
+              </div>
+            ),
           }}
           items={[
             {
@@ -498,7 +485,7 @@ const Content = () => {
               ),
             },
           ]}
-        ></Tabs>
+        />
       ),
     },
     {
@@ -551,7 +538,7 @@ const Content = () => {
   ]
 
   function onQueryChange(record) {
-    let {
+    const {
       url,
       method,
       requestType,
@@ -559,12 +546,10 @@ const Content = () => {
       data,
       headers,
     } = record
-    setUrl(url)
-    setMethod(method)
     setQueryParams(params)
     setReqHeaders(headers)
     store.requestType = requestType || DefaultRequestType
-    let formData = {
+    const formData = {
       url,
       method,
     }
@@ -585,7 +570,7 @@ const Content = () => {
       setReqJson(res)
     }
 
-    let timer = setTimeout(() => {
+    const timer = setTimeout(() => {
       if (requestType === 'upload') {
         paramsRef?.current?.initHandle(objToArr(res))
       } else {
@@ -601,10 +586,58 @@ const Content = () => {
   function onTabChange(key) {
     setTabKey(key)
     if (key === '6') {
-      let t = setTimeout(() => {
+      const t = setTimeout(() => {
         historySearchRef?.current?.search()
         clearTimeout(t)
       }, 0)
+    }
+  }
+
+  function formatQueryParams(url) {
+    const [urlPath, search] = url.split('?')
+    console.log(url)
+    console.log(urlPath, search)
+    // console.log(new URL(url))
+    // let { origin, pathname, search } = new URL(url)
+    const q = new URLSearchParams(search)
+    const o = {}
+    for (const [k, v] of q.entries()) {
+      // console.log(`${k}, ${v}`)
+      o[k] = v
+    }
+    console.log(o)
+    initFormData({
+      url: urlPath,
+    })
+    setTabKey('1')
+    that.paramsTabKey = '12'
+    setReqJson(o)
+    const timer = setTimeout(() => {
+      paramsJsonRef?.current?.initHandle(o)
+      clearTimeout(timer)
+    }, 200)
+  }
+
+  function menuClick({ key }) {
+    console.log(key)
+    const { url } = headForm.getFieldsValue()
+    if (key === 'queryFormat' && url.includes('?')) {
+      formatQueryParams(url)
+    }
+    if (key === 'jsonForm') {
+      setTabKey('1')
+      if (that.paramsTabKey === '11') {
+        // 切换到 Json 格式
+        that.paramsTabKey = '12'
+      } else {
+        // 切换到 Form 格式
+        that.paramsTabKey = '11'
+        console.log(reqJson)
+        paramsRef?.current?.initHandle(objToArr(reqJson))
+      }
+    }
+    if (key === 'abort') {
+      that.loading = false
     }
   }
 
@@ -614,7 +647,7 @@ const Content = () => {
         <Form
           form={headForm}
           {...layout}
-          initialValues={{ url, method }}
+          initialValues={{ url: testUrl, method: 'GET' }}
           name="basic"
           layout="inline"
           size="large"
@@ -625,20 +658,41 @@ const Content = () => {
                 {...disabledAutoCapitalize}
                 allowClear
                 addonBefore={prefixSelector}
-                className="w-[calc(100vw-250px)]"
-                onBlur={inputOnBlur}
+                className="w-[calc(100vw-290px)]"
+                // onBlur={inputOnBlur}
                 onPressEnter={inputOnEnter}
                 placeholder={`请输入完整url，"${testUrl}"， 或接口路径，"/api/xxx"`}
               />
             </Form.Item>
-            <Button
-              loading={loading}
+            <Dropdown.Button
+              // type="primary"
+              icon={<DownOutlined />}
+              loading={that.loading}
+              menu={{
+                items: [
+                  {
+                    label: 'Query参数格式化',
+                    key: 'queryFormat',
+                    disabled: method !== 'GET',
+                  },
+                  {
+                    label: '中止请求',
+                    key: 'abort',
+                  },
+                  // {
+                  //   label: 'Json ⇋ Form',
+                  //   key: 'jsonForm',
+                  // },
+                ],
+                onClick: menuClick,
+              }}
+              style={{
+                width: 'auto',
+              }}
               onClick={send}
-              type="primary"
-              icon={<SendOutlined />}
             >
               发送
-            </Button>
+            </Dropdown.Button>
           </Space.Compact>
         </Form>
         <div className="head-menu">
