@@ -1,5 +1,12 @@
 
 
+## [4.9.5](https://github.com/tive6/min-api/compare/4.9.4...4.9.5) (2024-12-10)
+
+
+### ⚡ Performance Improvements | 性能优化
+
+* 优化 删除历史记录操作逻辑，增加二次确认提示；删除多余注释代码； ([62d346a](https://github.com/tive6/min-api/commit/62d346a9ab257659e9aaaaa64102cd0f89631aca))
+
 ## [4.9.4](https://github.com/tive6/min-api/compare/4.9.3...4.9.4) (2024-12-09)
 
 
