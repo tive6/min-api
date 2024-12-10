@@ -5,10 +5,10 @@ import {
 } from '@ant-design/icons'
 import { useReactive } from 'ahooks'
 import {
+  App,
   Button,
   Form,
   Input,
-  notification,
   Select,
   Space,
   Table,
@@ -34,13 +34,14 @@ import {
   getRandomKey,
   HeadersFirstRowHandle,
 } from './../common/helper'
-const { Dragger } = Upload
 
 const ParamsFormTab = forwardRef(
   ({ setCurrentFile, name, onDataChange }, ref) => {
     useImperativeHandle(ref, () => ({
       initHandle,
     }))
+    const { notification } = App.useApp()
+
     const [form] = Form.useForm()
 
     const store = useStore()
@@ -338,20 +339,6 @@ const ParamsFormTab = forwardRef(
                       </Button>
                     </Tooltip>
                   </Upload>
-                  // <Dragger
-                  //   {...uploadProps}
-                  // >
-                  //   <p className="ant-upload-drag-icon">
-                  //     <InboxOutlined />
-                  //   </p>
-                  //   <p className="ant-upload-text">
-                  //     拖动文件到此区域，或{' '}
-                  //     <span className="ant-upload-span">
-                  //       点击上传
-                  //     </span>
-                  //   </p>
-                  //   {/*<p className="ant-upload-hint">暂不支持多文件同时上传</p>*/}
-                  // </Dragger>
                 )}
             </Space.Compact>
           )}

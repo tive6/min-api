@@ -5,10 +5,10 @@ import {
 import { relaunch } from '@tauri-apps/api/process'
 import { useReactive } from 'ahooks'
 import {
+  App,
   Button,
   Dropdown,
   Modal,
-  notification,
   Popover,
   Space,
   Table,
@@ -30,10 +30,13 @@ import useBaseConfig from '../hooks/useBaseConfig.jsx'
 import {
   getHistoryList,
   getSettingsList,
+  setHistoryList,
 } from '../store/index.js'
 import GlobalSettings from './globalSettings.jsx'
 
 const Com = () => {
+  const { notification } = App.useApp()
+
   const globalSettingsRef = useRef(null)
 
   const temp = useRef(null)
@@ -55,6 +58,8 @@ const Com = () => {
   async function cleanHistory() {
     try {
       await localforage.removeItem(historyKey)
+      setHistoryList([])
+      notification.destroy()
       notification.success({
         message: '提醒',
         description: '清除完成！',
@@ -194,8 +199,35 @@ const Com = () => {
       showHandlerModal('export')
     }
     if (key === 'cleanHistory') {
-      cleanHistory()
+      // cleanHistory()
+      showCleanHistoryModal()
     }
+  }
+
+  function showCleanHistoryModal() {
+    notification.warning({
+      message: '确认清除历史记录？',
+      description:
+        '清除后不可恢复，请提前导出备份，谨慎操作！',
+      duration: 0,
+      btn: (
+        <Space>
+          <Button
+            size="small"
+            onClick={() => notification.destroy()}
+          >
+            取消
+          </Button>
+          <Button
+            type="primary"
+            size="small"
+            onClick={cleanHistory}
+          >
+            确定
+          </Button>
+        </Space>
+      ),
+    })
   }
 
   const menuProps = {

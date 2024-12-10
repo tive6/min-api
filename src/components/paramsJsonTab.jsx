@@ -25,7 +25,14 @@ const ParamsJsonTab = forwardRef(
 
     useEffect(() => {
       let editor = new JsonEditor(editorWrap.current, {
-        modes: ['code', 'tree'],
+        modes: [
+          'code',
+          'tree',
+          // 'view',
+          // 'form',
+          // 'text',
+          // 'preview',
+        ],
         onChange() {
           let res = JSON.parse(editor.getText())
           setData(res)
@@ -54,7 +61,7 @@ const ParamsJsonTab = forwardRef(
         <div
           className="w-full h-[calc(100vh-216px)]"
           ref={editorWrap}
-        ></div>
+        />
       </>
     )
   }

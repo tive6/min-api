@@ -1,11 +1,11 @@
 import { DownOutlined } from '@ant-design/icons'
 import { useDebounceEffect, useReactive } from 'ahooks'
 import {
+  App,
   Badge,
   Dropdown,
   Form,
   Input,
-  notification,
   Select,
   Space,
   Tabs,
@@ -45,9 +45,10 @@ import ParamsFormTab from './components/paramsFormTab'
 import ParamsJsonTab from './components/paramsJsonTab'
 import SubTabBarExtra from './components/subTabBarExtra'
 import { setHistoryList, useStore } from './store/index'
-const { Option } = Select
 
 const Content = () => {
+  const { notification } = App.useApp()
+
   const paramsRef = useRef()
   const headersRef = useRef()
   const paramsJsonRef = useRef()
@@ -421,13 +422,10 @@ const Content = () => {
 
   const prefixSelector = (
     <Form.Item name="method" noStyle>
-      <Select style={{ width: 120 }}>
-        {MethodOptions.map(({ value, label }) => (
-          <Option key={value} value={value}>
-            {label}
-          </Option>
-        ))}
-      </Select>
+      <Select
+        style={{ width: 120 }}
+        options={MethodOptions}
+      />
     </Form.Item>
   )
 
@@ -595,7 +593,6 @@ const Content = () => {
 
   function formatQueryParams(url) {
     const [urlPath, search] = url.split('?')
-    console.log(url)
     console.log(urlPath, search)
     // console.log(new URL(url))
     // let { origin, pathname, search } = new URL(url)

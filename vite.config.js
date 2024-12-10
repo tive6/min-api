@@ -46,6 +46,6 @@ export default defineConfig(async () => ({
     // },
   },
   esbuild: {
-    // drop: isProd ? ['console', 'debugger'] : [],
+    drop: isProd ? ['console', 'debugger'] : [],
   },
 }))

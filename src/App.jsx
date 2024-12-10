@@ -8,7 +8,7 @@ import {
   onUpdaterEvent,
 } from '@tauri-apps/api/updater'
 import { useReactive } from 'ahooks'
-import { Button, notification } from 'antd'
+import { App, Button } from 'antd'
 import localforage from 'localforage'
 import { useEffect } from 'react'
 import { attachConsole, info } from 'tauri-plugin-log-api'
@@ -28,9 +28,8 @@ localforage.config({
   size: 50 * 1024 * 1024,
 })
 
-function App() {
-  const [api, contextHolder] =
-    notification.useNotification()
+function Com() {
+  const { notification } = App.useApp()
 
   const d = useReactive({
     status: '',
@@ -43,7 +42,7 @@ function App() {
     // const tauriVersion = await getTauriVersion()
     // console.log(tauriVersion)
     const appVersion = await getVersion()
-    api.info({
+    notification.info({
       style: {
         width: 430,
       },
@@ -125,7 +124,7 @@ function App() {
   }
 
   function cancel() {
-    api.destroy()
+    notification.destroy()
   }
 
   async function startUpdate() {
@@ -215,12 +214,12 @@ function App() {
       windowEventListener('remove')
     }
   }, [])
+
   return (
     <div className="container">
       <Content />
-      {contextHolder}
     </div>
   )
 }
 
-export default App
+export default Com
