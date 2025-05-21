@@ -1,5 +1,12 @@
 
 
+## [4.9.7](https://github.com/tive6/min-api/compare/4.9.5...4.9.7) (2025-05-21)
+
+
+### ✨ Features | 新功能
+
+* fetch 流式请求生产环境跨域限制解决；content-type 为 application/x-www-form-urlencoded 时 fetch 的body参数处理；请求类型切换导致 headers 中 content-type 参数重置问题解决 ([81a1c60](https://github.com/tive6/min-api/commit/81a1c60f3e9869cbeb5328347b052e165a302a3e))
+
 ## [4.9.5](https://github.com/tive6/min-api/compare/4.9.4...4.9.5) (2024-12-10)
 
 

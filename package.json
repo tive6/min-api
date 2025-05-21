@@ -1,7 +1,7 @@
 {
   "name": "min-api",
   "productName": "MinApi",
-  "version": "4.9.6",
+  "version": "4.9.7",
   "description": "一个基于Tauri和React开发，用于http/https接口测试的轻量级工具",
   "private": true,
   "type": "module",
