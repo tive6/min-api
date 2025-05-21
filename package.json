@@ -1,7 +1,7 @@
 {
   "name": "min-api",
   "productName": "MinApi",
-  "version": "4.9.5",
+  "version": "4.9.6",
   "description": "一个基于Tauri和React开发，用于http/https接口测试的轻量级工具",
   "private": true,
   "type": "module",
@@ -14,6 +14,7 @@
     "dev:t": "pnpm tauri dev",
     "app": "pnpm tauri build",
     "build:t": "pnpm tauri build",
+    "build:d": "pnpm tauri build --debug",
     "format": "prettier --write .",
     "lint": "eslint . --ext .js,.jsx,.cjs,.mjs,.ts,.tsx,.cts,.mts --fix",
     "git": "tive git -c tive.git.config.cjs",
@@ -27,6 +28,9 @@
   "dependencies": {
     "@ant-design/icons": "4.0.0",
     "@tauri-apps/api": "^1.4.0",
+    "@uiw/codemirror-extensions-langs": "^4.23.12",
+    "@uiw/codemirror-theme-vscode": "^4.23.12",
+    "@uiw/react-codemirror": "^4.23.12",
     "ahooks": "^3.7.7",
     "antd": "^5.20.6",
     "jsoneditor": "8",

@@ -185,16 +185,16 @@ const ParamsFormTab = forwardRef(
     useEffect(() => {
       if (name === 'HeadersTab') {
         // console.log(store.requestType)
-        let index = 0
-        if (store.requestType === 'json') {
-          index = 0
-        }
+        // let index = 0
+        // if (store.requestType === 'json') {
+        //   index = 0
+        // }
         if (store.requestType === 'upload') {
-          index = 2
+          let index = 2
+          data.list[0].keys = 'content-type'
+          data.list[0].values =
+            contentTypeOptions[index].value
         }
-        data.list[0].keys = 'content-type'
-        data.list[0].values =
-          contentTypeOptions[index].value
       }
     }, [store.requestType])
 

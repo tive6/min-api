@@ -69,6 +69,7 @@ const Content = () => {
   const that = useReactive({
     paramsTabKey: '11',
     resJsonData: {},
+    reqJson: {},
     isUpload: false,
     resData: '',
     fileKey: '',
@@ -78,7 +79,6 @@ const Content = () => {
   const [params, setParams] = useState([])
   const [headers, setHeaders] = useState([])
   const [reqParams, setReqParams] = useState({})
-  const [reqJson, setReqJson] = useState({})
   const [queryParams, setQueryParams] = useState({})
   const [reqHeaders, setReqHeaders] = useState({})
   const [resAllJson, setAllResJson] = useState({})
@@ -105,12 +105,18 @@ const Content = () => {
   useDebounceEffect(
     () => {
       try {
-        count.params = Reflect.ownKeys(reqJson)?.length
+        if (typeof that.reqJson === 'string') {
+          count.params = 1
+        } else {
+          count.params = Reflect.ownKeys(
+            that.reqJson
+          )?.length
+        }
       } catch (err) {
         count.params = 0
       }
     },
-    [reqJson],
+    [that.reqJson],
     {
       wait: 500,
     }
@@ -139,12 +145,17 @@ const Content = () => {
     send()
   }, [status])
 
+  function setReqJson(val) {
+    that.reqJson = val
+  }
+
   function paramsTabChange(key) {
     that.paramsTabKey = key
     if (key === '11') {
       count.params = params?.length || 0
     } else {
-      count.params = Reflect.ownKeys(reqJson)?.length || 0
+      count.params =
+        Reflect.ownKeys(that.reqJson)?.length || 0
     }
   }
 
@@ -290,6 +301,10 @@ const Content = () => {
       that.resData = []
       setTabKey('5')
       await processStream(reader, (str) => {
+        console.log(
+          `stream data ${that.resData.length}`,
+          str
+        )
         that.resData = [...that.resData, str]
       })
       setAllResJson({
@@ -304,6 +319,21 @@ const Content = () => {
         url,
       })
       console.log('fetchOfStream res', res)
+      if (status !== 200) {
+        notification.error({
+          message: '提醒',
+          description: (
+            <div className="break-all whitespace-pre-wrap">
+              请求失败！
+              <br />
+              status: {status}
+              <br />
+              statusText: {statusText}
+            </div>
+          ),
+          // duration: 0,
+        })
+      }
       return status === 200 ? 1 : 0
     } catch (e) {
       console.log('fetchOfStream err', e)
@@ -311,7 +341,9 @@ const Content = () => {
         message: '提醒',
         description: (
           <div className="break-all whitespace-pre-wrap">
-            请求失败！{e}
+            请求失败！
+            <br />
+            {e}
           </div>
         ),
         // duration: 0,
@@ -342,8 +374,8 @@ const Content = () => {
         obj = reqParams
       }
     } else {
-      if (JSON.stringify(reqJson) !== '{}') {
-        obj = reqJson
+      if (JSON.stringify(that.reqJson) !== '{}') {
+        obj = that.reqJson
       }
     }
     obj = Object.assign({}, queryParams, queryObj, obj)
@@ -360,7 +392,7 @@ const Content = () => {
         queryParams,
         queryObj
       )
-      p.data = Object.assign({}, reqParams, reqJson)
+      p.data = Object.assign({}, reqParams, that.reqJson)
       p.params = params
       console.log('params', params)
       console.log('data', p.data)
@@ -450,7 +482,7 @@ const Content = () => {
           onChange={paramsTabChange}
           tabBarExtraContent={{
             right: (
-              <div className="flex justify-between items-center w-[calc(100vw-300px)]">
+              <div className="flex justify-between items-center w-[calc(100vw-500px)]">
                 <div />
                 <SubTabBarExtra />
               </div>
@@ -482,6 +514,17 @@ const Content = () => {
                 />
               ),
             },
+            // {
+            //   key: '13',
+            //   label: 'Raw 格式',
+            //   children: (
+            //     <RawTab
+            //     // ref={paramsJsonRef}
+            //     // resJson={that.resJsonData}
+            //     // onDataChange={setReqJson}
+            //     />
+            //   ),
+            // },
           ]}
         />
       ),
@@ -575,7 +618,7 @@ const Content = () => {
         paramsJsonRef?.current?.initHandle(res)
       }
       clearTimeout(timer)
-    }, 200)
+    }, 50)
 
     // paramsRef.current.initHandle(objToArr(res))
     headersRef?.current?.initHandle(objToArr(headers))
@@ -629,8 +672,10 @@ const Content = () => {
       } else {
         // 切换到 Form 格式
         that.paramsTabKey = '11'
-        console.log(reqJson)
-        paramsRef?.current?.initHandle(objToArr(reqJson))
+        console.log(that.reqJson)
+        paramsRef?.current?.initHandle(
+          objToArr(that.reqJson)
+        )
       }
     }
     if (key === 'abort') {

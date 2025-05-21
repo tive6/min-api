@@ -113,12 +113,21 @@ export const stream = (opts = {}) => {
     console.log('stream options cookie', cookie)
     console.log('stream options data', data)
     let body = null
-    if (!['GET', 'HEAD'].includes(method)) {
-      body = JSON.stringify({
-        ...getGlobalConfig('body'),
-        ...(data || {}),
-      })
+    let allBody = {
+      ...getGlobalConfig('body'),
+      ...(data || {}),
     }
+    if (!['GET', 'HEAD'].includes(method)) {
+      if (
+        header['content-type'] ===
+        'application/x-www-form-urlencoded'
+      ) {
+        body = new URLSearchParams(allBody).toString()
+      } else {
+        body = JSON.stringify(allBody)
+      }
+    }
+    console.log('body', body)
     let query = new URLSearchParams({
       ...getGlobalConfig('query'),
       ...params,

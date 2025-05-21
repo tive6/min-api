@@ -18,8 +18,7 @@ const ParamsJsonTab = forwardRef(
     const [data, setData] = useState({})
 
     function initHandle(res) {
-      // console.log(res)
-      // setData(res)
+      setData(res)
       instance.current.set(res)
     }
 

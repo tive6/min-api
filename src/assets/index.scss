@@ -183,3 +183,13 @@ input {
     padding-top: 16px;
   }
 }
+
+.cm-wrapper {
+  border: thin solid #3883fa;
+}
+
+.cm-box {
+  .cm-editor {
+    height: 100%;
+  }
+}

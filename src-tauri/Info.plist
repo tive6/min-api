@@ -10,5 +10,10 @@
       <string>Copyright © 2024 Tiven. All rights reserved.</string>
       <key>TimeZone</key>
       <string>Asia/Shanghai</string>
+      <key>NSAppTransportSecurity</key>
+      <dict>
+        <key>NSAllowsArbitraryLoads</key>
+        <true/>
+      </dict>
     </dict>
 </plist>

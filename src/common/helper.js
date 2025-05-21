@@ -140,6 +140,7 @@ export const mergeHeaders = (headers = {}, requestType) => {
     header: defaultHeaders,
   }
   try {
+    console.log(headers)
     let keys = Reflect.ownKeys(headers)
     if (keys.length === 0) {
       if (requestType === 'upload') {
@@ -298,34 +299,24 @@ export async function processStream(reader, cb) {
       const { value, done } = await reader.read()
       if (done) {
         haveData = false
+        if (!buffer.includes('\n')) {
+          cb && cb(buffer)
+        }
         break
       }
-      // console.log(value, 888)
-      buffer += decoder.decode(value)
-      // console.log(buffer)
+      let text = decoder.decode(value)
+      buffer += text
+      // console.log('text', buffer)
       while (buffer.includes('\n')) {
-        const line = buffer.substring(
-          0,
-          buffer.indexOf('\n')
-        )
-        // console.log(line)
-        buffer = buffer.substring(buffer.indexOf('\n') + 1)
-
+        let index = buffer.indexOf('\n')
+        let line = buffer.substring(0, index)
+        buffer = buffer.substring(index + 1)
         cb && cb(line)
-        // if (line.startsWith('data:')) {
-        //   // const jsonData = JSON.parse(line.substring(5))
-        //   // console.log(line.substring(5))
-        //   cb && cb(line)
-        // } else {
-        //   // console.log('Received message:', line)
-        //   // 在这里处理接收到的文本数据
-        // }
       }
     }
 
     reader.releaseLock()
     return content
-    // appendToOutput(new Date().toLocaleString());
   } catch (e) {
     console.log(e)
     return ''
