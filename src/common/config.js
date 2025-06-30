@@ -86,6 +86,10 @@ export const RequestTypeOptions = [
     label: 'json',
   },
   {
+    value: 'jsonp',
+    label: 'jsonp',
+  },
+  {
     value: 'stream',
     label: '流式',
   },

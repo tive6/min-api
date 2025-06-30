@@ -213,14 +213,7 @@ const Content = () => {
       } = res
       console.log('requestType', store.requestType)
       console.log('http res data', res.data)
-      if (store.requestType !== 'download') {
-        try {
-          // 尝试解析 json
-          data = JSON.parse(data)
-        } catch (err) {
-          console.info('response data is not json')
-        }
-      } else {
+      if (store.requestType === 'download') {
         if (status !== 200) {
           try {
             data = numbersArrayToText(data)
@@ -229,6 +222,29 @@ const Content = () => {
               'response data is not numbersArray'
             )
           }
+        }
+      } else if (store.requestType === 'jsonp') {
+        try {
+          let params = p?.params || {}
+          let cbName =
+            params?.cb || params?.callback || 'callback'
+
+          window[cbName] = function (result) {
+            data = result
+          }
+          let fn = new Function(`return ${data}`)
+          fn()
+        } catch (e) {
+          console.log(e)
+          console.info('response data is not jsonp')
+        }
+      } else {
+        try {
+          // 尝试解析 json
+          console.log(data)
+          data = JSON.parse(data)
+        } catch (err) {
+          console.info('response data is not json')
         }
       }
       that.resData = data
