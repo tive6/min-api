@@ -1,5 +1,12 @@
 
 
+## [4.9.8](https://github.com/tive6/min-api/compare/4.9.7...4.9.8) (2025-06-30)
+
+
+### ✨ Features | 新功能
+
+* 增加jsonp类型请求数据解析 ([5049d02](https://github.com/tive6/min-api/commit/5049d02edd799bc8389abaa11276d3c948d8ae64))
+
 ## [4.9.7](https://github.com/tive6/min-api/compare/4.9.5...4.9.7) (2025-05-21)
 
 
