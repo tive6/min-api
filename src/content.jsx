@@ -227,9 +227,17 @@ const Content = () => {
         }
       } else if (store.requestType === 'jsonp') {
         try {
+          let { url } = p
+          let { searchParams } = new URL(url)
+          let cb = searchParams.get('cb')
+          let callback = searchParams.get('cb')
           let params = p?.params || {}
           let cbName =
-            params?.cb || params?.callback || 'callback'
+            cb ||
+            callback ||
+            params?.cb ||
+            params?.callback ||
+            'callback'
 
           window[cbName] = function (result) {
             data = result
