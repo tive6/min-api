@@ -1,10 +1,13 @@
-import { Space, Table, Tooltip } from 'antd'
+import { Table, Tooltip } from 'antd'
 import localforage from 'localforage'
 import propTypes from 'prop-types'
 import { useEffect } from 'react'
 
 import { historyKey } from '../common/consts.js'
-import { getLocalHistoryList } from '../common/helper.js'
+import {
+  fetchToCurlHandler,
+  getLocalHistoryList,
+} from '../common/helper.js'
 import useBaseConfig from '../hooks/useBaseConfig.jsx'
 import { setHistoryList, useStore } from '../store/index.js'
 
@@ -39,7 +42,7 @@ const Com = ({ onQueryChange }) => {
       width: 100,
       align: 'center',
       render: (text, record) => (
-        <Space size="small">
+        <div className="flex flex-wrap flex-gap-5px">
           <Tooltip placement="top" title="重新请求">
             <a onClick={() => onQueryChange(record)}>
               请求
@@ -51,7 +54,15 @@ const Com = ({ onQueryChange }) => {
           >
             删除
           </a>
-        </Space>
+          <Tooltip placement="top" title="复制为curl命令">
+            <a
+              onClick={() => fetchToCurlHandler(record)}
+              className="text-cyan"
+            >
+              curl命令
+            </a>
+          </Tooltip>
+        </div>
       ),
     },
   ]

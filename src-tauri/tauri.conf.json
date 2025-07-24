@@ -66,6 +66,11 @@
       },
       "process": {
         "all": true
+      },
+      "clipboard": {
+        "all": true,
+        "writeText": true,
+        "readText": true
       }
     },
     "bundle": {

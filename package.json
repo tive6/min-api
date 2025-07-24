@@ -33,6 +33,7 @@
     "@uiw/react-codemirror": "^4.23.12",
     "ahooks": "^3.7.7",
     "antd": "^5.20.6",
+    "fetch-to-curl": "^0.6.0",
     "jsoneditor": "8",
     "localforage": "^1.10.0",
     "lodash-es": "^4.17.21",
@@ -41,7 +42,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "tauri-plugin-log-api": "github:tauri-apps/tauri-plugin-log#v1",
-    "valtio": "^1.13.2"
+    "valtio": "^1.13.2",
+    "yargs-parser": "^22.0.0"
   },
   "devDependencies": {
     "@release-it/conventional-changelog": "^8.0.1",
@@ -52,6 +54,7 @@
     "@vitejs/plugin-react": "^4.1.0",
     "adm-zip": "^0.5.5",
     "axios": "^1.7.2",
+    "cookie": "^1.0.2",
     "eslint": "^8.45.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-html": "^7.1.0",
@@ -62,13 +65,17 @@
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "eslint-plugin-unused-imports": "^3.0.0",
     "fs-extra": "^11.2.0",
+    "jsesc": "^3.1.0",
     "node-ssh": "^12.0.0",
+    "nunjucks": "^3.2.4",
     "prettier": "^3.0.2",
+    "query-string": "^9.2.2",
     "release-it": "^17.6.0",
     "rimraf": "^3.0.2",
     "sass": "^1.63.6",
     "smol-toml": "^1.3.0",
     "unocss": "^0.62.4",
+    "url": "^0.11.4",
     "vite": "^4.5.0"
   }
 }

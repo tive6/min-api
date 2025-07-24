@@ -13,7 +13,7 @@ edition = "2021"
 tauri-build = { version = "1.5.2", features = [] }
 
 [dependencies]
-tauri = { version = "1.7.1", features = [ "updater", "app-all", "window-all", "dialog-all", "fs-all", "protocol-all", "path-all", "process-all", "global-shortcut-all", "http-all", "http-multipart", "shell-open"] }
+tauri = { version = "1.7.1", features = [ "clipboard-all", "updater", "app-all", "window-all", "dialog-all", "fs-all", "protocol-all", "path-all", "process-all", "global-shortcut-all", "http-all", "http-multipart", "shell-open"] }
 serde = { version = "1.0.203", features = ["derive"] }
 serde_json = "1.0.120"
 time = "0.3.36"

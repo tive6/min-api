@@ -28,7 +28,9 @@ import {
 } from './common/consts'
 import {
   arrToObj,
+  curlExport,
   downloadFile,
+  fetchToCurlHandler,
   fileToUint8Array,
   formatFixedDate,
   getLocalHistoryList,
@@ -368,7 +370,7 @@ const Content = () => {
     }
   }
 
-  const send = async () => {
+  const send = async (type) => {
     // loading 是否正在请求
     if (that.loading) return
     const { url, method } = headForm.getFieldsValue()
@@ -457,6 +459,10 @@ const Content = () => {
         // )
         // p.data = formData
       }
+    }
+    if (type === 'copyToCurl') {
+      fetchToCurlHandler(p)
+      return
     }
     await httpHandle({
       ...p,
@@ -594,7 +600,7 @@ const Content = () => {
     },
   ]
 
-  function onQueryChange(record) {
+  function onQueryChange(record, type) {
     const {
       url,
       method,
@@ -611,7 +617,9 @@ const Content = () => {
       method,
     }
     initFormData(formData)
-    setStatus(status + 1)
+    if (type !== 'curlToFetch') {
+      setStatus(status + 1)
+    }
     let res = null
     if (method === 'GET') {
       res = params
@@ -697,6 +705,22 @@ const Content = () => {
     if (key === 'abort') {
       that.loading = false
     }
+    if (key === 'curlToFetch') {
+      curlExportHandler()
+    }
+    if (key === 'fetchToCurl') {
+      send('copyToCurl')
+    }
+  }
+
+  async function curlExportHandler() {
+    try {
+      let p = await curlExport()
+      console.log('curlExport', p)
+      onQueryChange(p, 'curlToFetch')
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   return (
@@ -741,6 +765,14 @@ const Content = () => {
                   //   label: 'Json ⇋ Form',
                   //   key: 'jsonForm',
                   // },
+                  {
+                    label: '从粘贴板curl命令导入',
+                    key: 'curlToFetch',
+                  },
+                  {
+                    label: '复制为curl命令',
+                    key: 'fetchToCurl',
+                  },
                 ],
                 onClick: menuClick,
               }}

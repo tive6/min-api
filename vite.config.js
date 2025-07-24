@@ -1,5 +1,8 @@
 import react from '@vitejs/plugin-react'
 import { defineConfig } from 'vite'
+// import topLevelAwait from 'vite-plugin-top-level-await'
+// import wasm from "vite-plugin-wasm";
+// import { viteStaticCopy } from 'vite-plugin-static-copy'
 
 const isProd = process.env.NODE_ENV === 'production'
 
@@ -7,8 +10,29 @@ console.log('TAURI_DEBUG', !!process.env.TAURI_DEBUG)
 
 // https://vitejs.dev/config/
 export default defineConfig(async () => ({
-  plugins: [react()],
-
+  plugins: [
+    // wasm(),
+    // topLevelAwait({
+    //   promiseExportName: '__tla',
+    //   promiseImportName: (i) => `__tla_${i}`,
+    // }),
+    react(),
+    // viteStaticCopy({
+    // targets: [
+    //   {
+    //     src: 'node_modules/web-tree-sitter/tree-sitter.wasm',
+    //     dest: '.',
+    //   },
+    //   {
+    //     src: 'node_modules/curlconverter/dist/tree-sitter-bash.wasm',
+    //     dest: '.',
+    //   },
+    // ],
+    // }),
+  ],
+  // optimizeDeps: {
+  //   exclude: ['curlconverter'],
+  // },
   // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
   // prevent vite from obscuring rust errors
   clearScreen: false,
@@ -20,6 +44,11 @@ export default defineConfig(async () => ({
   // to make use of `TAURI_DEBUG` and other env variables
   // https://tauri.studio/v1/api/config#buildconfig.beforedevcommand
   envPrefix: ['VITE_', 'TAURI_'],
+  // define: {
+  //   'process': '{}',
+  //   'globalThis': {},
+  //   'global': {},
+  // },
   build: {
     // Tauri supports es2021
     target:
@@ -48,4 +77,7 @@ export default defineConfig(async () => ({
   esbuild: {
     drop: isProd ? ['console', 'debugger'] : [],
   },
+  // define: {
+  //   'process.env': process.env
+  // },
 }))

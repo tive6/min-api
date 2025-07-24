@@ -1,3 +1,7 @@
+import {
+  readText,
+  writeText,
+} from '@tauri-apps/api/clipboard'
 import { open, save } from '@tauri-apps/api/dialog'
 import {
   readTextFile,
@@ -5,6 +9,8 @@ import {
   writeTextFile,
 } from '@tauri-apps/api/fs'
 import { downloadDir } from '@tauri-apps/api/path'
+import { message } from 'antd'
+import fetchToCurl from 'fetch-to-curl'
 import localforage from 'localforage'
 import { cloneDeep } from 'lodash-es'
 import { parse } from 'path-browserify'
@@ -18,6 +24,7 @@ import {
 } from '../store/index.js'
 import { ContentTypeMap } from './config.js'
 import { historyKey, httpRegex } from './consts.js'
+import { toJsonObject } from './curlToJson.js'
 
 export const formatFixedDate = (date, fmt) => {
   if (typeof date === 'number') {
@@ -517,4 +524,76 @@ export function windowEventListener(type) {
     'keydown',
     keyDownHandler
   )
+}
+
+export async function curlExport() {
+  try {
+    let text = await readText()
+    console.log(text)
+    let json = toJsonObject(text)
+    return {
+      ...json,
+      params: json.queries,
+    }
+  } catch (e) {
+    console.log(e)
+    return ''
+  }
+}
+
+export async function setClipboardText(text) {
+  try {
+    await writeText(text)
+  } catch (e) {
+    console.log(e)
+  }
+}
+
+const curlStr = `
+curl 'https://mp-activity.csdn.net/activity/report' \\
+  -H 'Accept: application/json, text/javascript, */*; q=0.01' \\
+  -H 'Accept-Language: zh-CN,zh;q=0.9' \\
+  -H 'Cache-Control: no-cache' \\
+  -H 'Connection: keep-alive' \\
+  -H 'Content-Type: application/json; charset=UTF-8' \\
+  -b 'UN=tiven_; fid=20_72173686980-1723171964606-667777; UserName=tiven_; UserInfo=0f04c32d71074d8faf6957682559ca1b; UserToken=0f04c32d71074d8faf6957682559ca1b; UserNick=%E5%A4%A9%E5%95%8F_; AU=9D3; BT=1746762659167; p_uid=U010000; tfstk=gwUxIiMZi_dxe8axZSSkjvMvty5ukgV4m-PBSADDf8e8_RLDoV0mffM8QE4gs5Z9WWkyoS40sIrzKWT0oiuMWquZ59Xh-wA4gVu6Sg1PCKRS6XQM5misu4_zLV2R-wV4GglXwEQ3SrX1pxks5misF0Mr_dgsGf1-FfhefKw_C_3SsfH6fjG6F3GtFAgs5RN5wfkSGVgsstLrQGMHWkRobLJ6zj865zhxVgVjFPzOsjixdSMRd9a-5mHQGYL1KWU1NYGLPOJmQzF7lX25rE3TNfeKluBWkRFbYRlQhapjMoNLt0UNdFhzV-ooMuC6VxNIhWg0SL1xQr2YWmzCKUkb2zztouXv-Ao_qroUoTTxRkPmolw51FMTVfsyCy4Kcqvnpfxfw_KwbmGycQ_-3SJQa9l-K_2XbhoJYbHhwi-wbmMjwvfkJh-Z2iC..; csdn_newcert_tiven_=1; c_dl_fref=https://blog.csdn.net/2401_83242712/article/details/145210905; c_dl_prid=1751009330146_995979; c_dl_rid=1751009362090_610482; c_dl_fpage=/download/yhpyhp123456789/4693612; c_dl_um=distribute.pc_relevant.none-task-download-2%7Edefault%7EBlogCommendFromBaidu%7ECtr-3-877204-blog-145210905.235%5Ev43%5Epc_blog_bottom_relevance_base7; uuid_tt_dd=10_10228374260-1752832793179-336819; c_segment=3; Hm_lvt_6bcd52f51e9b3dce32bec4a3997715ac=1751008805,1752832794; HMACCOUNT=2D2209B9D6785B22; dc_sid=df236ea632ac3ee52eac0f4bdb1fa16b; FCNEC=%5B%5B%22AKsRol9pVv015OhCC3w-me4orqTI_55cG8P4u3mWtPTS7dYpLHIp8RkR6gLMxtcZNoOzA2S3KGeBp9jPGF3klhzPxDXZfXc4K3nHJQZarWq9r70WqzRETs7zmLgylB2QkVMv_-alEpPfK_Dqb-ovPUoQdbt3DgLr5A%3D%3D%22%5D%5D; creative_btn_mp=3; __gads=ID=191f04350992d988:T=1745301304:RT=1753198370:S=ALNI_MYtJASWnDjtRdnpkFPJfDqeRIUz0A; __gpi=UID=0000109ac294254d:T=1745301304:RT=1753198370:S=ALNI_MZ2wcTqP5j5cU_UjsYTq6hT6TvXOQ; __eoi=ID=7d7d33efa38f67f8:T=1742800467:RT=1753198370:S=AA-Afja8-mge_bD4OODKvYIOsYli; dc_session_id=10_1753257257096.926935; c_pref=default; c_ref=default; c_first_ref=default; c_first_page=https%3A//blog.csdn.net/tiven_%3Ftype%3Dblog; _clck=4dphmh%7C2%7Cfxu%7C0%7C1547; creativeSetApiNew=%7B%22toolbarImg%22%3A%22https%3A//img-home.csdnimg.cn/images/20230921102607.png%22%2C%22publishSuccessImg%22%3A%22https%3A//img-home.csdnimg.cn/images/20240229024608.png%22%2C%22articleNum%22%3A147%2C%22type%22%3A2%2C%22oldUser%22%3Atrue%2C%22useSeven%22%3Afalse%2C%22oldFullVersion%22%3Atrue%2C%22userName%22%3A%22tiven_%22%7D; _clsk=3eq1f7%7C1753257258939%7C1%7C0%7Ce.clarity.ms%2Fcollect; c_dsid=11_1753257262675.671198; c_page_id=default; dc_tos=szudym; log_Id_pv=2; Hm_lpvt_6bcd52f51e9b3dce32bec4a3997715ac=1753257263; log_Id_view=12' \\
+  -H 'Origin: https://blog.csdn.net' \\
+  -H 'Pragma: no-cache' \\
+  -H 'Referer: https://blog.csdn.net/tiven_?type=blog' \\
+  -H 'Sec-Fetch-Dest: empty' \\
+  -H 'Sec-Fetch-Mode: cors' \\
+  -H 'Sec-Fetch-Site: same-site' \\
+  -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/138.0.0.0 Safari/537.36' \\
+  -H 'sec-ch-ua: "Not)A;Brand";v="8", "Chromium";v="138", "Google Chrome";v="138"' \\
+  -H 'sec-ch-ua-mobile: ?0' \\
+  -H 'sec-ch-ua-platform: "macOS"' \\
+  --data-raw '{"pageUrl":"https://blog.csdn.net/tiven_?type=blog","action":"pageView","platform":"pc"}'
+`
+
+// let json = toJsonObject(curlStr)
+// console.log(json.data)
+// let cl = fetchToCurl(json.url, {
+//   ...json,
+//   body: json.data,
+// })
+// console.log(cl)
+
+export async function fetchToCurlHandler(config) {
+  try {
+    let { url, data, params, method } = config
+    method = method.toLowerCase()
+    let q = new URLSearchParams(params)
+    let query = q.toString()
+    if (method === 'get' && query) {
+      url = `${url}?${query}`
+    }
+    let curlCmd = fetchToCurl(url, {
+      ...config,
+      body: method === 'get' ? undefined : data,
+    })
+    await writeText(curlCmd)
+    message.success('复制成功')
+  } catch (e) {
+    console.log(e)
+  }
 }
