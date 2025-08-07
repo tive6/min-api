@@ -318,7 +318,7 @@ export async function processStream(reader, cb) {
         let index = buffer.indexOf('\n')
         let line = buffer.substring(0, index)
         buffer = buffer.substring(index + 1)
-        cb && cb(line)
+        line?.trim() && cb && cb(line)
       }
     }
 

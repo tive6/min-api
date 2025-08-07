@@ -336,11 +336,8 @@ const Content = () => {
       that.resData = []
       setTabKey('5')
       await processStream(reader, (str) => {
-        console.log(
-          `stream data ${that.resData.length}`,
-          str
-        )
-        that.resData = [...that.resData, str]
+        // console.log(`stream data ${that.resData.length}`, str)
+        that.resData = [str, ...that.resData]
       })
       setAllResJson({
         body: [],
