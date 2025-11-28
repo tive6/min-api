@@ -3,6 +3,7 @@ import { useDebounceEffect, useReactive } from 'ahooks'
 import {
   App,
   Badge,
+  Button,
   Dropdown,
   Form,
   Input,
@@ -21,11 +22,7 @@ import {
   layout,
   MethodOptions,
 } from './common/config'
-import {
-  historyKey,
-  httpRegex,
-  testUrl,
-} from './common/consts'
+import { historyKey, httpRegex, testUrl } from './common/consts'
 import {
   arrToObj,
   curlExport,
@@ -38,6 +35,7 @@ import {
   numbersArrayToText,
   objToArr,
   processStream,
+  saveResponseData,
 } from './common/helper'
 import DataTab from './components/dataTab'
 import HeadMenu from './components/headMenu'
@@ -110,9 +108,7 @@ const Content = () => {
         if (typeof that.reqJson === 'string') {
           count.params = 1
         } else {
-          count.params = Reflect.ownKeys(
-            that.reqJson
-          )?.length
+          count.params = Reflect.ownKeys(that.reqJson)?.length
         }
       } catch (err) {
         count.params = 0
@@ -156,8 +152,7 @@ const Content = () => {
     if (key === '11') {
       count.params = params?.length || 0
     } else {
-      count.params =
-        Reflect.ownKeys(that.reqJson)?.length || 0
+      count.params = Reflect.ownKeys(that.reqJson)?.length || 0
     }
   }
 
@@ -186,10 +181,7 @@ const Content = () => {
   }
 
   const httpHandle = async (p) => {
-    const date = formatFixedDate(
-      new Date(),
-      'yyyy-MM-dd HH:mm:ss'
-    )
+    const date = formatFixedDate(new Date(), 'yyyy-MM-dd HH:mm:ss')
     const opts = {
       ...p,
       createTime: date,
@@ -205,14 +197,7 @@ const Content = () => {
       const res = await http(p)
       if (!that.loading) return
       console.log('http res', res)
-      let {
-        url,
-        config,
-        data,
-        headers,
-        status,
-        statusText,
-      } = res
+      let { url, config, data, headers, status, statusText } = res
       console.log('requestType', store.requestType)
       console.log('http res data', res.data)
       if (store.requestType === 'download') {
@@ -220,9 +205,7 @@ const Content = () => {
           try {
             data = numbersArrayToText(data)
           } catch (err) {
-            console.info(
-              'response data is not numbersArray'
-            )
+            console.info('response data is not numbersArray')
           }
         }
       } else if (store.requestType === 'jsonp') {
@@ -243,10 +226,7 @@ const Content = () => {
             params?.callback ||
             'callback' ||
             'cb'
-          console.log(
-            'jsonp callback function name',
-            cbName
-          )
+          console.log('jsonp callback function name', cbName)
 
           window[cbName] = function (result) {
             data = result
@@ -269,11 +249,7 @@ const Content = () => {
       that.resData = data
       setTabKey('5')
       state = 1
-      if (
-        status === 200 &&
-        data &&
-        store.requestType === 'download'
-      ) {
+      if (status === 200 && data && store.requestType === 'download') {
         console.log('downloadFile start')
         const err = await downloadFile({
           url,
@@ -419,11 +395,7 @@ const Content = () => {
     if (method === 'GET') {
       p.params = obj
     } else {
-      const params = Object.assign(
-        {},
-        queryParams,
-        queryObj
-      )
+      const params = Object.assign({}, queryParams, queryObj)
       p.data = Object.assign({}, reqParams, that.reqJson)
       p.params = params
       console.log('params', params)
@@ -451,9 +423,7 @@ const Content = () => {
           return false
         }
         const { name, type } = currentFile.current
-        const uint8Array = await fileToUint8Array(
-          currentFile.current
-        )
+        const uint8Array = await fileToUint8Array(currentFile.current)
         // let arrayBuffer = await currentFile.current.arrayBuffer()
         const fileKey = p.data.file || 'file'
         that.fileKey = fileKey
@@ -490,10 +460,7 @@ const Content = () => {
 
   const prefixSelector = (
     <Form.Item name="method" noStyle>
-      <Select
-        style={{ width: 120 }}
-        options={MethodOptions}
-      />
+      <Select style={{ width: 120 }} options={MethodOptions} />
     </Form.Item>
   )
 
@@ -503,10 +470,7 @@ const Content = () => {
       label: (
         <div>
           参数
-          <Badge
-            count={count.params}
-            style={{ backgroundColor: '#249C47' }}
-          />
+          <Badge count={count.params} style={{ backgroundColor: '#249C47' }} />
         </div>
       ),
       children: (
@@ -570,10 +534,7 @@ const Content = () => {
       label: (
         <div>
           请求头
-          <Badge
-            count={count.headers}
-            style={{ backgroundColor: '#249C47' }}
-          />
+          <Badge count={count.headers} style={{ backgroundColor: '#249C47' }} />
         </div>
       ),
       forceRender: true, // 被隐藏时是否渲染 DOM 结构
@@ -588,41 +549,22 @@ const Content = () => {
     {
       key: '4',
       label: '响应',
-      children: (
-        <DataTab
-          resJson={resAllJson}
-          modes={['tree', 'code']}
-        />
-      ),
+      children: <DataTab resJson={resAllJson} modes={['tree', 'code']} />,
     },
     {
       key: '5',
       label: '数据',
-      children: (
-        <DataTab
-          resJson={that.resData}
-          modes={['code', 'tree']}
-        />
-      ),
+      children: <DataTab resJson={that.resData} modes={['code', 'tree']} />,
     },
     {
       key: '6',
       label: '历史',
-      children: (
-        <HistoryTab onQueryChange={onQueryChange} />
-      ),
+      children: <HistoryTab onQueryChange={onQueryChange} />,
     },
   ]
 
   function onQueryChange(record, type) {
-    const {
-      url,
-      method,
-      requestType,
-      params,
-      data,
-      headers,
-    } = record
+    const { url, method, requestType, params, data, headers } = record
     setQueryParams(params)
     setReqHeaders(headers)
     store.requestType = requestType || DefaultRequestType
@@ -711,9 +653,7 @@ const Content = () => {
         // 切换到 Form 格式
         that.paramsTabKey = '11'
         console.log(that.reqJson)
-        paramsRef?.current?.initHandle(
-          objToArr(that.reqJson)
-        )
+        paramsRef?.current?.initHandle(objToArr(that.reqJson))
       }
     }
     if (key === 'abort') {
@@ -807,9 +747,25 @@ const Content = () => {
       <Tabs
         tabBarExtraContent={{
           right:
-            tabKey === '6' ? (
-              <HistorySearch ref={historySearchRef} />
-            ) : null,
+            (tabKey === '5' && (
+              <Button
+                disabled={!that.resData}
+                onClick={() => {
+                  const { url, method } = headForm.getFieldsValue()
+                  saveResponseData({
+                    data: that.resData,
+                    url,
+                    method,
+                  })
+                }}
+                type="link"
+                size="small"
+              >
+                保存数据
+              </Button>
+            )) ||
+            (tabKey === '6' && <HistorySearch ref={historySearchRef} />) ||
+            null,
         }}
         onTabClick={onTabChange}
         defaultActiveKey={tabKey}

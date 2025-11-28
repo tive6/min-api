@@ -1,7 +1,4 @@
-import {
-  readText,
-  writeText,
-} from '@tauri-apps/api/clipboard'
+import { readText, writeText } from '@tauri-apps/api/clipboard'
 import { open, save } from '@tauri-apps/api/dialog'
 import {
   readTextFile,
@@ -34,17 +31,12 @@ export const formatFixedDate = (date, fmt) => {
     return ''
   }
   if (typeof date === 'string') {
-    date = date.includes('0+0000')
-      ? date.substr(0, 19)
-      : date
+    date = date.includes('0+0000') ? date.substr(0, 19) : date
   }
   let o = {
     'M+': date.getMonth() + 1, //月份
     'd+': date.getDate(), //日
-    'h+':
-      date.getHours() % 12 === 0
-        ? 12
-        : date.getHours() % 12, //小时
+    'h+': date.getHours() % 12 === 0 ? 12 : date.getHours() % 12, //小时
     'H+': date.getHours(), //小时
     'm+': date.getMinutes(), //分
     's+': date.getSeconds(), //秒
@@ -69,20 +61,15 @@ export const formatFixedDate = (date, fmt) => {
   if (/(E+)/.test(fmt)) {
     fmt = fmt.replace(
       RegExp.$1,
-      (RegExp.$1.length > 1
-        ? RegExp.$1.length > 2
-          ? '星期'
-          : '周'
-        : '') + week[date.getDay() + '']
+      (RegExp.$1.length > 1 ? (RegExp.$1.length > 2 ? '星期' : '周') : '') +
+        week[date.getDay() + '']
     )
   }
   for (let k in o) {
     if (new RegExp('(' + k + ')').test(fmt)) {
       fmt = fmt.replace(
         RegExp.$1,
-        RegExp.$1.length === 1
-          ? o[k]
-          : ('00' + o[k]).substr(('' + o[k]).length)
+        RegExp.$1.length === 1 ? o[k] : ('00' + o[k]).substr(('' + o[k]).length)
       )
     }
   }
@@ -213,10 +200,7 @@ export const getFilename = (headers) => {
 }
 
 const genUUID = () => {
-  return Math.random()
-    .toString(36)
-    .toLowerCase()
-    .substring(2)
+  return Math.random().toString(36).toLowerCase().substring(2)
 }
 
 export const getStaticFileInfo = ({ url, headers }) => {
@@ -240,11 +224,7 @@ export const isOctetStream = (headers) => {
   return contentType.includes(OctetStreamType)
 }
 
-export const downloadFile = async ({
-  url,
-  data,
-  headers,
-}) => {
+export const downloadFile = async ({ url, data, headers }) => {
   try {
     let filename = ''
     if (isOctetStream(headers)) {
@@ -356,14 +336,10 @@ export async function exportHistory(json) {
     })
     console.log({ filePath })
     if (!filePath) return false
-    await writeTextFile(
-      filePath,
-      JSON.stringify(json, null, 2),
-      {
-        // dir: BaseDirectory.Download,
-        recursive: true,
-      }
-    )
+    await writeTextFile(filePath, JSON.stringify(json, null, 2), {
+      // dir: BaseDirectory.Download,
+      recursive: true,
+    })
     return true
   } catch (e) {
     console.log(e)
@@ -501,10 +477,7 @@ export function contextmenuHandler(event) {
 // 阻止F12、Ctrl+Shift+I、Ctrl+Shift+C快捷键打开 开发者工具
 export function keyDownHandler(event) {
   const { keyCode, ctrlKey, shiftKey } = event
-  if (
-    keyCode === 123 ||
-    (ctrlKey && shiftKey && [67, 73].includes(keyCode))
-  ) {
+  if (keyCode === 123 || (ctrlKey && shiftKey && [67, 73].includes(keyCode))) {
     // F12 123
     // Ctrl+Shift+I 73
     // Ctrl+Shift+C 67
@@ -516,14 +489,8 @@ export function keyDownHandler(event) {
 }
 
 export function windowEventListener(type) {
-  document[`${type}EventListener`](
-    'contextmenu',
-    contextmenuHandler
-  )
-  document[`${type}EventListener`](
-    'keydown',
-    keyDownHandler
-  )
+  document[`${type}EventListener`]('contextmenu', contextmenuHandler)
+  document[`${type}EventListener`]('keydown', keyDownHandler)
 }
 
 export async function curlExport() {
@@ -595,5 +562,33 @@ export async function fetchToCurlHandler(config) {
     message.success('复制成功')
   } catch (e) {
     console.log(e)
+  }
+}
+
+export async function saveResponseData({ data, url, method }) {
+  try {
+    let { host, pathname } = new URL(url)
+    let apiName = pathname.split('/').pop()
+    let filename = `${host}-${apiName}-${method}-${Date.now()}`
+    const filePath = await save({
+      title: `Save ${filename}`,
+      defaultPath: filename,
+      filters: [
+        {
+          name: filename,
+          extensions: ['json'],
+        },
+      ],
+    })
+    console.log({ filePath })
+    if (!filePath) return false
+    await writeTextFile(filePath, JSON.stringify(data, null, 2), {
+      // dir: BaseDirectory.Download,
+      recursive: true,
+    })
+    return true
+  } catch (e) {
+    console.log(e)
+    return false
   }
 }
