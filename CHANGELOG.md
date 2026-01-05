@@ -1,5 +1,21 @@
 
 
+## [4.9.10](https://github.com/tive6/min-api/compare/4.9.8...4.9.10) (2026-01-05)
+
+
+### ✨ Features | 新功能
+
+* jsonp url query 回调参数兼容处理 ([deb4672](https://github.com/tive6/min-api/commit/deb467203cb6c8c65ba308f6f8a62e000523cd65))
+* jsonp 自定义callback key兼容处理 ([d892a9c](https://github.com/tive6/min-api/commit/d892a9c6d4e1a6c983adab1eaf2261d83e9dca0b))
+* 增加 curl 导入、转换功能 ([0f78827](https://github.com/tive6/min-api/commit/0f78827473360b08f2238748d6844b33adf9146b))
+* 增加保存数据功能； ([4b47672](https://github.com/tive6/min-api/commit/4b476729b605688ba058f9bf6fc64a732c16d225))
+* 解决 curl 导入，url前包含多余$' 和 headers 中  Cookie 缺失的问题； ([6a85670](https://github.com/tive6/min-api/commit/6a85670a2ca8953d41d2d7ce2bc7941b353a8bfe))
+
+
+### ⚡ Performance Improvements | 性能优化
+
+* 流式请求数据展示优化 ([dbc5659](https://github.com/tive6/min-api/commit/dbc56590693798344e6ad9db2f1c11614433a476))
+
 ## [4.9.8](https://github.com/tive6/min-api/compare/4.9.7...4.9.8) (2025-06-30)
 
 
