@@ -496,7 +496,7 @@ export function windowEventListener(type) {
 export async function curlExport() {
   try {
     let text = await readText()
-    console.log(text)
+    // console.log(text)
     let json = toJsonObject(text)
     return {
       ...json,

@@ -415,12 +415,20 @@ export const toJsonObject = (curlCommand) => {
       'http://' + request.urlWithoutQuery
   }
 
-  // console.log(request.urlWithoutQuery)
-  // let urlWithoutQuery = request.urlWithoutQuery.replace(/\/$/, '')
-  requestJson.url = request.urlWithoutQuery.replace(
+  let urlWithoutQuery = decodeURIComponent(
+    request.urlWithoutQuery
+  )
+  urlWithoutQuery = urlWithoutQuery.replace(
     /\/$/,
     ''
   )
+  if (urlWithoutQuery.includes('http')) {
+    let i1 = urlWithoutQuery.indexOf('http')
+    let i2 = request.url.indexOf('http')
+    urlWithoutQuery = urlWithoutQuery.slice(i1)
+    request.url = request.url.slice(i2)
+  }
+  requestJson.url = urlWithoutQuery
   // requestJson.url = urlWithoutQuery.replace(/^'|'$/g, '')
   // requestJson.raw_url = request.url.replace(/^'|'$/g, '')
   requestJson.raw_url = request.url
@@ -446,6 +454,14 @@ export const toJsonObject = (curlCommand) => {
     }
 
     requestJson.headers = headers
+  }
+
+  if (request.cookieString) {
+    requestJson.cookieString = request.cookieString
+    requestJson.headers = {
+      ...requestJson.headers,
+      Cookie: request.cookieString,
+    }
   }
 
   if (request.query) {

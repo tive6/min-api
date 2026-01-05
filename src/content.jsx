@@ -199,7 +199,7 @@ const Content = () => {
       console.log('http res', res)
       let { url, config, data, headers, status, statusText } = res
       console.log('requestType', store.requestType)
-      console.log('http res data', res.data)
+      console.log('http res data', res.data && 1)
       if (store.requestType === 'download') {
         if (status !== 200) {
           try {
@@ -240,7 +240,7 @@ const Content = () => {
       } else {
         try {
           // 尝试解析 json
-          console.log(data)
+          // console.log(data)
           data = JSON.parse(data)
         } catch (err) {
           console.info('response data is not json')
