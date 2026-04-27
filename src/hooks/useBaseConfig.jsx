@@ -151,7 +151,7 @@ export default function useBaseConfig() {
       align: 'center',
       width: 90,
       render: (text) => {
-        if (text.toLocaleLowerCase() === 'get') {
+        if ((text || 'get').toLocaleLowerCase() === 'get') {
           return <Tag color="green">{text}</Tag>
         } else {
           return <Tag color="purple">{text}</Tag>
